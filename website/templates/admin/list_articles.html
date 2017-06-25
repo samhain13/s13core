@@ -1,0 +1,145 @@
+{% extends 'admin/_base.html' %}
+{% import 'admin/_form_macros.html' as form_macros %}
+
+{% block sidebar -%}
+    {%- for bar in sidebars -%}
+        {% include 'admin/sidebars/' + bar + '.html' %}
+    {%- endfor %}
+{%- endblock %}
+
+{% block main_interface -%}
+{%- if article %}
+<h2>Article Details</h2>
+
+<div class="model-item">
+    <dl class="model-item-summary">
+        <dt>{%- if article.is_homepage %}(Homepage) {% endif %}{% if not article.parent %}Section {% endif %}Title</dt>
+        <dd>{{ article.title }}</dd>
+        <dt>Description</dt>
+        <dd>{{ article.description }}</dd>
+        <dt>Keywords</dt>
+        <dd>{{ article.keywords }}</dd>
+        <dt>Date Created and Last Edited</dt>
+        <dd>
+            {{ article.date_made_text }}<br />
+            {{ article.date_edit_text }}
+        </dd>
+        <dt>Link to {% if article.is_public %}Public Page{% else %}Draft{% endif %}</dt>
+        <dd><a href="{{ article.make_url() }}" target="_blank">{{ article.make_url() }}</a></dd>
+        <dt>Link to Preview Image</dt>
+        <dd>{% if article.image %}<a href="{{ article.image.url }}" target="_blank">{{ article.image.url }}</a>{% else %}None{% endif %}</dd>
+    </dl>
+    <nav class="model-item-actions">
+        <h3>Navigation</h3>
+        {%- if article.parent %}
+        <a href="{{ reverse('s13admin:detail_article', args=[article.parent.pk]) }}" class="highlight">Up One Level</a>
+        {%- endif %}
+        <a href="{{ reverse('s13admin:update_article', args=[article.pk]) }}">Update</a>
+        <a href="{{ reverse('s13admin:delete_article', args=[article.pk]) }}" class="lowlight">Delete</a>
+    </nav>
+</div>
+
+<hr />
+
+{% endif %}
+<h2>{% if search_mode == 'children' %}child{% else %}{{ search_mode }}{% endif %} Search</h2>
+    {%- if article %}
+<p>
+    Use the following form to search for items that you might want to set as a{% if search_mode == 'image' %}n{% endif %} <strong>{% if search_mode == 'children' %}child{% else %}{{ search_mode }}{% endif %}</strong> of “{{ article.title }}”.
+</p>
+    {%- endif %}
+
+<form action=".#search-form" method="get" id="search-form">
+    <div class="form-group">
+        <label for="search-terms">Search Terms</label>
+        <div class="field-holder">
+            <input type="text" id="search-tems" name="q" value="{{ search_terms }}"  />
+        </div>
+    </div>
+    {{ form_macros.form_bottom(submit_text='Search Articles', cancel_url=cancel_url, cancel_text='Clear Search') }}
+</form>
+
+<hr />
+
+<h2>
+{%- if search_terms %}
+    Search Results
+{%- else %}
+    {%- if article %}
+        {%- if search_mode == 'children' %}
+    Child Articles
+        {%- else %}
+    {{ ui_title }}
+        {%- endif %}
+    {%- else %}
+        Available Articles
+    {%- endif %}
+{%- endif %}
+    <small>{{ page_obj.paginator.count }} Item{% if page_obj.paginator.count != 1 %}s{% endif %} Total</small>
+</h2>
+    {% for child in page_obj.object_list %}
+<div class="model-item">
+    <dl class="model-item-summary">
+    {%- if search_mode in ['image', 'media'] %}
+        <dt>Title</dt>
+        <dd>{{ child.title }}</dd>
+        <dt>Description</dt>
+        <dd>{{ child.description }}</dd>
+        <dt>Media File</dt>
+        <dd>{{ child.media_file }}</dd>
+    {%- else %}
+        <dt>{%- if child.is_homepage %}(Homepage) {% endif %}{% if not child.parent %}Section {% endif %}Title</dt>
+        <dd>{{ child.title }}</dd>
+        <dt>Description</dt>
+        <dd>{{ child.description }}</dd>
+        {%- if child.parent %}
+        <dt>Parent Article</dt>
+        <dd><a href="{{ reverse('s13admin:detail_article', args=[child.parent.pk]) }}">{{ child.parent.title }}</a></dd>
+        {%- endif %}
+    {%- endif %}
+    </dl>
+    <nav class="model-item-actions">
+        <h3>Navigation</h3>
+        
+        {%- if search_mode == 'children' %}
+            {%- if article and child.parent == article %}
+        <a href="{{ reverse('s13admin:associate_article', args=['remove', search_mode, article.pk, child.pk]) }}" class="lowlight" class="lowlight">Remove Child</a>
+            {%- else %}
+        <a href="{{ reverse('s13admin:associate_article', args=['add', search_mode, article.pk, child.pk]) }}">Set As Child</a>
+            {%- endif %}
+        {%- elif search_mode == 'sidelinks' %}
+            {%- if article and child in article.sidelinks.all() %}
+        <a href="{{ reverse('s13admin:associate_article', args=['remove', search_mode, article.pk, child.pk]) }}" class="lowlight">Remove Sidelink</a>
+            {%- else %}
+        <a href="{{ reverse('s13admin:associate_article', args=['add', search_mode, article.pk, child.pk]) }}">Set As Sidelink</a>
+            {%- endif %}
+        {%- elif search_mode == 'image' %}
+            {%- if child == article.image %}
+        <a href="{{ reverse('s13admin:associate_article', args=['remove', search_mode, article.pk, child.pk]) }}" class="lowlight">Unset Image</a>
+            {%- else %}
+        <a href="{{ reverse('s13admin:associate_article', args=['add', search_mode, article.pk, child.pk]) }}">Set As Image</a>
+            {%- endif %}
+        {%- elif search_mode == 'media' %}
+            {%- if child in article.media.all() %}
+        <a href="{{ reverse('s13admin:associate_article', args=['remove', search_mode, article.pk, child.pk]) }}" class="lowlight">Remove Media</a>
+            {%- else %}
+        <a href="{{ reverse('s13admin:associate_article', args=['add', search_mode, article.pk, child.pk]) }}">Add To Media</a>
+            {%- endif %}
+        {%- endif %}
+        
+        {%- if search_mode not in ['image', 'media'] %}
+            {%- if search_mode != 'all' %}<hr />{% endif %}
+        <a href="{{ reverse('s13admin:detail_article', args=[child.pk]) }}" class="highlight">Details</a>
+        <a href="{{ reverse('s13admin:update_article', args=[child.pk]) }}">Update</a>
+        <a href="{{ reverse('s13admin:delete_article', args=[child.pk]) }}" class="lowlight">Delete</a>
+        {%- endif %}
+    </nav>
+</div>
+    {%- endfor %}
+
+<nav class="pagination">
+    <a href="{{ back_link }}">Back</a>
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    <a href="{{ next_link }}">Next</a>
+</nav>
+{%- endblock %}

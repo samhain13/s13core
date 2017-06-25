@@ -1,0 +1,48 @@
+{% extends 'admin/_base.html' %}
+{% import 'admin/_form_macros.html' as form_macros %}
+
+{% block sidebar %}
+<h2>Account Information</h2>
+
+<form action="{{ reverse('s13admin:update_password', args=[request.user.pk]) }}" method="post">    
+    <h3>Change Account Password</h3>
+    {%- for field in change_password_form %}
+    {{ form_macros.form_group(field) }}
+    {%- endfor %}
+    {{ form_macros.form_bottom(csrf_token=csrf_token) }}    
+</form>
+
+<form action="{{ reverse('s13admin:update_user_info', args=[request.user.pk]) }}" method="post">
+    <h3>Change Account Information</h3>
+    {%- for field in change_information_form %}
+    {{ form_macros.form_group(field) }}
+    {%- endfor %}
+    {{ form_macros.form_bottom(csrf_token=csrf_token) }}    
+</form>
+{% endblock %}
+
+{% block main_interface %}
+<h2>Website Summary</h2>
+
+<h3>Article Statistics</h3>
+
+<div id="stats-articles">
+    {% for section in stats['sections'] %}
+    <dl>
+        <dt>{{ section.title }}</dt>
+        <dd style="min-width: 150px; width: {{ section.pct_all - 20 }}%">
+            <div>
+                Contains {{ section.num_descendants }} child article(s)<br />
+                or {{ section.pct_all }}% of internal pages.
+            </div>
+        </dd>
+    </dl>
+    {% endfor %}
+    <p>
+        <span>Total Sections: {{ stats['sections_count'] }}</span> |
+        <span>Total Articles: {{ stats['articles_count'] }}</span> |
+        <span>Published Articles: {{ stats['articles_public'] }}</span> |
+        <span>Draft Articles: {{ stats['articles_draft'] }}</span>
+    </p>
+</div>
+{% endblock %}

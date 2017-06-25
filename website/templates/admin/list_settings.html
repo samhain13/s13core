@@ -1,0 +1,29 @@
+{% extends 'admin/_base.html' %}
+
+{% block sidebar -%}
+    {%- for bar in sidebars -%}
+        {% include 'admin/sidebars/' + bar + '.html' %}
+    {%- endfor %}
+{%- endblock %}
+
+{% block main_interface -%}
+<h2>Available Site Settings</h2>
+    {% for setting in object_list %}
+<div class="model-item">
+    <dl class="model-item-summary">
+        <dt>{% if setting.is_active %}Active {% endif %}Settings Name</dt>
+        <dd>{{ setting.name }}</dd>
+        <dt>Description</dt>
+        <dd>{{ setting.description }}</dd>
+    </dl>
+    <nav class="model-item-actions">
+        <h3>Actions</h3>
+        <a href="{{ reverse('s13admin:update_settings', args=[setting.pk]) }}">Update</a>
+        <a href="{{ reverse('s13admin:delete_settings', args=[setting.pk]) }}" class="lowlight">Delete</a>
+    </nav>
+</div>
+        {%- if setting.is_active %}
+<hr />
+        {%- endif %}
+    {%- endfor %}
+{%- endblock %}

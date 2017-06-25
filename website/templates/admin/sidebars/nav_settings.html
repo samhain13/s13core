@@ -1,0 +1,23 @@
+
+<h2>Settings Sub-Navigation</h2>
+{%- if create_mode %}
+<nav>
+    {%- if create_mode == 'settings' %}
+    <a href="{{ reverse('s13admin:create_settings') }}" class="highlight">Create New Settings</a>
+    {%- elif create_mode == 'contact-info' %}
+    <a href="{{ reverse('s13admin:create_contact_info') }}" class="highlight">Create Contact Information</a>
+    {%- elif create_mode == 'copyright-info' %}
+    <a href="{{ reverse('s13admin:create_copyright_info') }}" class="highlight">Create Copyright Information</a>
+    {%- elif create_mode == 'disclaimer' %}
+    <a href="{{ reverse('s13admin:create_disclaimer') }}" class="highlight">Create Disclaimer</a>
+    {%- endif %}
+</nav>
+
+{%- endif %}
+
+<nav>
+    <h3>More Models Under This Section</h3>
+    <a href="{{ reverse('s13admin:contact_info') }}">Contact Information</a>
+    <a href="{{ reverse('s13admin:copyright_info') }}">Copyright Statements</a>
+    <a href="{{ reverse('s13admin:disclaimer') }}">Disclaimers</a>
+</nav>

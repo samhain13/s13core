@@ -1,0 +1,18 @@
+
+<h2>FileAssets Sub-Navigation</h2>
+<nav>
+    <a href="{{ reverse('s13admin:create_fileasset') }}" class="highlight">Create FileAsset</a>
+</nav>
+
+<h2>Filter By Extension</h2>
+<nav>
+    <a href="{{ reverse('s13admin:fileassets') }}?q=extension-avi">AVI</a>
+    <a href="{{ reverse('s13admin:fileassets') }}?q=extension-gif">GIF</a>
+    <a href="{{ reverse('s13admin:fileassets') }}?q=extension-jpg%7Cjpeg">JPG | JPEG</a>
+    <a href="{{ reverse('s13admin:fileassets') }}?q=extension-mkv">MKV</a>
+    <a href="{{ reverse('s13admin:fileassets') }}?q=extension-mp3%7Cmp4">MP3 | MP4</a>
+    <a href="{{ reverse('s13admin:fileassets') }}?q=extension-pdf">PDF</a>
+    <a href="{{ reverse('s13admin:fileassets') }}?q=extension-png">PNG</a>
+    <a href="{{ reverse('s13admin:fileassets') }}?q=extension-svg">SVG</a>
+    <a href="{{ reverse('s13admin:fileassets') }}?q=extension-txt">TXT</a>
+</nav>

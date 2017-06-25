@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{% block window_title %}{{ s.window_title|safe }}{% endblock %}</title>
+        <meta name="description" content="{% block meta_description %}{{ s.description|safe }}{% endblock %}" />
+        <meta name="keywords" content="{% block meta_keywords %}{{ s.keywords|safe }}{% endblock %}" />
+    {%- if s.css %}
+        {{ s.css|safe }}
+    {%- endif %}
+    <script src="{{ h.static('js/jquery-3.1.js') }}"></script>
+    <script src="{{ h.static('js/generic-actions.js') }}"></script>
+    {%- if s.js %}
+        {{ s.js|safe }}
+    {%- endif %}
+    </head>
+    <body id="{% block body_id %}base-body{% endblock %}">
+        <header id="site-header">
+            <h1>
+                <small>{% block site_title %}{{ s.title|safe }}{% endblock %}</small><br />
+                {% block article_title %}{{ article.title|safe }}{% endblock %}
+            </h1>
+            
+            <div id="site-tools">
+                <div id="intro-search">
+                    <form action="#" method="get">
+                        <h2><label for="search-terms">Search This Website</label></h2>
+                        <p>
+                            <input type="text" id="search-terms" name="q" />
+                            <input type="submit" value="Go" />
+                        </p>
+                    </form>
+                    
+                    <p>Sed mattis ex eget diam luctus, id rhoncus mauris rhoncus. Pellentesque semper feugiat velit tristique placerat. Morbi viverra viverra laoreet.</p>
+                </div>
+                
+                <ul class="site-nav">
+                {%- for n in h.make_nav_items(sections, s.current_url): %}
+                    <li>{{ n|safe }}</li>
+                {%- endfor %}
+                </ul>
+                
+                <div class="clearer"></div>
+            </div>
+        </header>
+        
+        <div id="site-content">
+            {% block html_body %}{% endblock %}
+        </div>
+        
+        <footer id="site-footer">
+        {%- if s.copyright %}
+            <p>{{ s.copyright.make_statement()|safe }}</p>
+        {%- endif %}    
+        </footer>
+    </body>
+</html>

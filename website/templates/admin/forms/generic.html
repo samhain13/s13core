@@ -1,0 +1,12 @@
+{% extends 'admin/_base.html' %}
+{% import 'admin/_form_macros.html' as form_macros %}
+
+{% block main_interface %}
+<form{% if form_id %} id="{{ form_id }}"{% endif %} action="." method="post">
+    <p class="form-description">{{ ui_description }}</p>
+    {%- for field in form %}
+    {{ form_macros.form_group(field) }}
+    {%- endfor %}
+    {{ form_macros.form_bottom(csrf_token=csrf_token) }}
+</form>
+{% endblock %}

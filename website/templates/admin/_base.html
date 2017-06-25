@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>S13Core: {{ ui_title }}</title>
+        <meta name="description" content="{{ ui_description }}" />
+        <link rel="stylesheet" href="/static/css/admin.css" />
+        <link rel="icon" href="/static/res/s13.png" />
+        {%- block extra_head %}{% endblock %}
+    </head>
+    <body>
+        <header>
+            <h1>S13Core: {{ ui_title }}</h1>
+            {%- if request.user.is_authenticated %}
+            <ul class="admin-navigation">
+                <li><a href="{{ reverse('s13admin:dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ reverse('s13admin:settings') }}">Site Settings</a></li>
+                <li><a href="{{ reverse('s13admin:articles') }}">Content Management</a></li>
+                <li><a href="{{ reverse('s13admin:fileassets') }}">File Management</a></li>
+                <li><a href="{{ reverse('s13admin:logout') }}">Log Out</a></li>
+            </ul>
+            {%- endif %}
+        </header>
+        
+        {%- set messages=get_messages(request) %}
+        <div id="system-messages">
+            {%- if messages %}
+            <ul>
+                {%- for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><span>{{ message }}</span></li>
+                {%- endfor %}
+            </ul>
+            {% endif -%}
+        </div>
+        
+        {%- block login_form %}{% endblock %}
+        
+        {%- if request.user.is_authenticated %}
+        <div id="main-block">
+            <section id="sidebar">
+                {%- block sidebar %}{%- endblock %}
+            </section>
+            
+            <section id="main-interface">
+                {%- block main_interface %}{%- endblock %}
+            </section>
+        </div>
+        {%- endif %}
+        
+        <footer>
+            <p>
+                S13Core Website Management System version 1.0<br />
+                Copyright © 2016 Arielle B Cruz. All rights reserved.
+            </p>
+        </footer>
+        {%- block extra_bottom %}{% endblock %}
+    </body>
+</html>

@@ -1,0 +1,20 @@
+{% extends 'defaults/_base.html' %}
+
+{% block html_body %}
+    {{- article.body|safe }}
+    {%- if articles %}
+
+        <hr />
+
+        {% for a in articles.object_list %}
+        <article>
+            <header><h1>{{ a.title|safe }}</h1></header>
+            <p>{{ a.description|safe }}</p>
+            <p>Read more: <a href="{{ a.make_url() }}">{{ a.title|safe }}</a></p>
+        </article>
+        {% endfor %}
+        
+        {{ h.make_paginator_nav(articles, s.current_url)|safe }}
+
+    {%- endif -%}
+{% endblock %}

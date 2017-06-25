@@ -1,0 +1,49 @@
+{% extends 'defaults/_base.html' %}
+
+{% if s.nohome_title %}
+    {% set page_title = s.nohome_title %}
+{% else %}
+    {% set page_title = 'Website Under Construction' %}
+{% endif %}
+
+
+{% block window_title %}{{ s.title|safe }}: {{ page_title }}{% endblock %}
+{% block body_id %}body-no-homepage{% endblock %}
+{% block article_title %}{{ page_title }}{% endblock %}
+
+{% block html_body %}
+    {%- if s.nohome_content_type  == 'sections': %}
+    <section id="section-summary">
+        <h2>Summary of Website Sections</h2>
+        {%- for s in sections: %}
+        <div>
+            <div class="section-image">
+            {%- if s.image: -%}
+                <img src="{{ s.image|safe }}" alt="Section cover image." class="section-image" />
+            {%- else -%}
+            </div>
+            {%- endif %}
+            <h3><a href="{{ s.make_url()|safe }}">{{ s.title|safe }}</a></h3>
+            <p>{{ s.description|safe }}</p>
+            <div class="clearer"></div>
+        </div>
+        {%- endfor %}
+    </section>
+    {%- elif s.nohome_content_type  == 'articles': %}
+    <section id="articles-summary">
+        <h2>Latest Articles</h2>
+        {%- for a in articles.object_list: %}
+        <p>Article Number {{ a }}</p>
+        {%- endfor %}
+        
+        {{ h.make_paginator_nav(articles, reverse('s13.content.homepage'))|safe }}
+    </section>
+    {%- elif s.nohome_content_type  == 'custom_html': %}
+    <section id="custom-content">
+        <h2>Custom Content</h2>
+        {{ s.nohome_custom|safe }}
+    </section>
+    {%- else %}
+    
+    {%- endif %}
+{%- endblock %}

@@ -1,0 +1,4 @@
+*.pyc
+*.pyo
+s13core/*/migrations/*_dev.py
+website/static/uploads

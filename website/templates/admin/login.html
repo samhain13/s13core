@@ -1,0 +1,11 @@
+{% extends 'admin/_base.html' %}
+{% import 'admin/_form_macros.html' as form_macros %}
+
+{% block login_form %}
+<form id="login-form" action="." method="post">
+    {%- for field in form %}
+    {{ form_macros.form_group(field) }}
+    {%- endfor %}
+    {{ form_macros.form_bottom(csrf_token=csrf_token, submit_text='Log In') }}
+</form>
+{% endblock %}

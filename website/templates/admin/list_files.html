@@ -1,0 +1,56 @@
+{% extends 'admin/_base.html' %}
+{% import 'admin/_form_macros.html' as form_macros %}
+
+{% block sidebar -%}
+    {%- for bar in sidebars -%}
+        {% include 'admin/sidebars/' + bar + '.html' %}
+    {%- endfor %}
+{%- endblock %}
+
+{% block main_interface -%}
+<h2>FileAsset Search</h2>
+<form action=".#search-form" method="get" id="search-form">
+    <div class="form-group">
+        <label for="search-terms">Search Terms</label>
+        <div class="field-holder">
+            <input type="text" id="search-terms" name="q" value="{{ search_terms }}"  />
+        </div>
+    </div>
+    {{ form_macros.form_bottom(submit_text='Search FileAssets', cancel_url=cancel_url, cancel_text='Clear Search') }}
+</form>
+
+<hr />
+
+<h2>
+{%- if search_terms %}
+    Search Results
+{%- else %}
+    Available FileAssets
+{%- endif %}
+    <small>{{ page_obj.paginator.count }} FileAsset{% if page_obj.paginator.count != 1 %}s{% endif %} Total</small>
+</h2>
+    {% for fileasset in page_obj.object_list %}
+<div class="model-item">
+    <dl class="model-item-summary">
+        <dt>Title</dt>
+        <dd>{{ fileasset.title }}</dd>
+        <dt>Description</dt>
+        <dd>{{ fileasset.description }}</dd>
+        <dt>Media File</dt>
+        <dd>{{ fileasset.media_file }}</dd>
+    </dl>
+    <nav class="model-item-actions">
+        <h3>Navigation</h3>
+        <a href="{{ fileasset.media_file.url }}" class="highlight" target="_blank">View</a>
+        <a href="{{ reverse('s13admin:update_fileasset', args=[fileasset.pk]) }}">Update</a>
+        <a href="{{ reverse('s13admin:delete_fileasset', args=[fileasset.pk]) }}" class="lowlight">Delete</a>
+    </nav>
+</div>
+    {%- endfor %}
+
+<nav class="pagination">
+    <a href="{{ back_link }}">Back</a>
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    <a href="{{ next_link }}">Next</a>
+</nav>
+{%- endblock %}

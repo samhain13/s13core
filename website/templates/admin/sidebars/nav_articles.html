@@ -1,0 +1,29 @@
+
+<h2>Articles Sub-Navigation</h2>
+<nav>
+    {%- if article %}
+        {%- if article.parent %}
+<a href="{{ reverse('s13admin:detail_article', args=[article.parent.pk]) }}" class="highlight">Up One Level</a>
+        {%- endif %}
+    <a href="{{ reverse('s13admin:create_article', args=[article.pk]) }}" class="highlight">Create Child Article</a>
+    {%- else %}
+    <a href="{{ reverse('s13admin:create_article') }}" class="highlight">Create New Section</a>
+    {%- endif %}
+</nav>
+
+{%- if article %}
+<nav>
+    <h3>Content Associations</h3>
+    <a href="{{ reverse('s13admin:detail_article', args=[article.pk, 'image']) }}">Set Preview Image</a>
+    <a href="{{ reverse('s13admin:detail_article', args=[article.pk]) }}">Manage Child Articles</a>
+    <a href="{{ reverse('s13admin:detail_article', args=[article.pk, 'media']) }}">Manage Media</a>
+    <a href="{{ reverse('s13admin:detail_article', args=[article.pk, 'sidelinks']) }}">Manage Sidelinks</a>
+</nav>
+{%- endif %}
+
+<nav>
+    <h3>Current Site Sections</h3>
+    {%- for section in sections %}
+    <a href="{{ reverse('s13admin:detail_article', args=[section.pk]) }}">{{ section.title }}</a>
+    {%- endfor %}
+</nav>

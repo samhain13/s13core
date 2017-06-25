@@ -1,0 +1,70 @@
+{% macro form_bottom(submit_text='Submit', csrf_token=None, hidden_fields=None, show_reset=False, cancel_url=None, cancel_text='Cancel'): %}
+    {#-
+        Constructs a form-bottom classed div containing the submit button,
+        an optional csrf_token, and optional hidden_fields. hidden_fields is
+        a list of 2-tuples containing each field's name and value.
+    -#}
+    <div class="form-bottom">
+        {%- if csrf_token %}
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+        {%- endif %}
+        {%- if hidden_fields %}
+            {%- for name, value in hidden_fields %}
+        <input type="hidden" name="{{ name }}" value="{{ value }}" />
+            {%- endfor %}
+        {%- endif %}
+        <input type="submit" value="{{ submit_text }}" />
+        {%- if show_reset %}
+        <input type="reset" value="Reset" />
+        {%- endif %}
+        {%- if cancel_url %}
+        <a href="{{ cancel_url }}" class="lowlight">{{ cancel_text }}</a>
+        {%- endif %}
+    </div>
+{%- endmacro %}
+
+
+{% macro form_group(field) %}
+    {#-
+        Constructs a form-group classed div containing the field's label,
+        errors (if any), and the field itself.
+    -#}
+    {%- if field.field.widget.__class__.__name__.lower() == 'clearablefileinput' %}
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}">
+            {{ field.label }} {% if field.field.required -%}
+            <strong title="required">*</strong>
+            {%- endif %}
+        </label>
+        <div class="field-holder">
+            <input type="file" id="{{ field.id_for_label }}" name="{{ field.name }}" />
+            {%- if field.value() %} | Currently: <a href="{{ field.value().url }}" target="_blank">{{ field.value() }}</a>{% endif %}
+        </div>
+    </div>
+    {% else %}
+        {%- if field.field.widget.__class__.__name__.lower() == 'checkboxinput' %}
+    <div class="form-group form-group-inline">
+        {%- else %}
+    <div class="form-group">
+        {%- endif %}
+        <label for="{{ field.id_for_label }}">
+            {{ field.label }} {% if field.field.required -%}
+            <strong title="required">*</strong>
+            {%- endif %}
+        </label>
+        <div class="field-holder">
+            {%- if field.errors %}
+            <ul class="field-errors">
+                {%- for error in field.errors %}
+                <li>{{ error }}</li>
+                {%- endfor %}
+            </ul>
+            {%- endif %}
+            {{ field }}
+        </div>
+        {%- if field.help_text %}
+        <p class="help-text">{{ field.help_text|safe }}</p>
+        {%- endif %}
+    </div>
+    {%- endif %}
+{%- endmacro %}

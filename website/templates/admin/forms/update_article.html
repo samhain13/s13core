@@ -1,0 +1,99 @@
+{% extends 'admin/_base.html' %}
+{% import 'admin/_form_macros.html' as form_macros %}
+
+{% block sidebar %}
+<h2>Sidebar</h2>
+<nav id="article-form-toggles">
+    <h3>Toggle Fieldsets</h3>
+</nav>
+{%- endblock %}
+
+{% block main_interface %}
+<h2>Main Interface</h2>
+<form{% if form_id %} id="{{ form_id }}"{% endif %} action="." method="post">
+    <p class="form-description">{{ ui_description }}</p>
+    
+    <fieldset id="fields-primary-fields">
+        <legend>Primary Fields</legend>
+    {%- for field in form.get_fields(['slug', 'title', 'body']) %}
+    {{ form_macros.form_group(field) }}
+    {%- endfor %}
+    </fieldset>
+    
+    <fieldset id="fields-meta-information">
+        <legend>Meta Information</legend>
+    {%- for field in form.get_fields(['description', 'keywords']) %}
+    {{ form_macros.form_group(field) }}
+    {%- endfor %}
+    </fieldset>
+    
+    <fieldset id="fields-display-options">
+        <legend>Display Options</legend>
+    {%- for field in form.get_fields(['template', 'include_children', 'sort_children', 'sort_article_media', 'weight', 'is_public', 'is_homepage']) %}
+    {{ form_macros.form_group(field) }}
+    {%- endfor %}
+    </fieldset>
+    
+    <fieldset id="fields-front-end-customisations">
+        <legend>Front End Customizations</legend>
+    {%- for field in form.get_fields(['css', 'js']) %}
+    {{ form_macros.form_group(field) }}
+    {%- endfor %}
+    </fieldset>
+    
+    <div class="hidden-inputs">
+    {%- for field in form.get_fields(['date_made', 'owner', 'parent']) %}
+        {%- if field.name == 'parent' %}
+        <input type="hidden" id="parent" name="parent" value="{% if parent_pk %}{{ parent_pk }}{% else %}{{ field.value() if field.value() else '' }}{% endif %}" />
+        {%- elif field.name == 'owner' %}
+        <input type="hidden" id="owner" name="owner" value="{{ field.value() if field.value() else request.user.pk }}" />
+        {%- else %}
+        <input type="hidden" id="{{ field.name }}" name="{{ field.name }}" value="{{ field.value() if field.value() else '' }}" />
+        {%- endif %}
+    {%- endfor %}
+    </div>
+    
+    {{ form_macros.form_bottom(csrf_token=csrf_token, submit_text='Update Article' if object else 'Create Article', cancel_url=reverse('s13admin:detail_article', args=[object.pk]) if object else reverse('s13admin:articles')) }}
+</form>
+{% endblock %}
+
+
+{% block extra_bottom %}
+<script src="/static/js/jquery-3.1.js"></script>
+<script>
+    $(document).ready( function() {
+        var fields_nav = $('#article-form-toggles');
+        $('fieldset').each( function() {
+            var id_ = $(this).attr('id');
+            var title = id_.replace(/fields-/, '').replace(/-/g, ' ');
+            var a = $('<a href="#">' + title + '</a>');
+            a.click( function() {
+                $('fieldset').hide();
+                $('#' + id_).show()
+            });
+            fields_nav.append(a);
+            if (id_ != 'fields-primary-fields') $(this).hide();
+        });
+
+        // Alert for when required fields are not filled.
+        $('form input[type="submit"]').each( function() {
+            var button = $(this);
+            button.click( function() {
+                var form = $(button.parents('form:first'));
+                var ul = $('<ul></ul>');
+                $('input, textarea, select', form).each( function() {
+                    var input = $(this);
+                    if (input.prop('required') && !input.val()) {
+                        var label = $('label[for="' + input.prop('id') + '"]');
+                        var text = label.text().replace(/  /g, '').replace('*', '');
+                        ul.append($('<li class="error"><span>' + text + ' is required.</span></li>'));
+                    }
+                });
+                if (ul.find('li').length >= 1) {
+                    $('#system-messages').append(ul);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

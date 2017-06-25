@@ -1,0 +1,22 @@
+{% extends 'defaults/_base.html' %}
+
+{% block html_body %}
+    <div class="cols">
+        <article class="col-60">
+            {{- article.body|safe }}
+        </article>
+        
+        <nav>
+            <h2>Latest Articles</h2>
+            <ul>
+                {% for l in latest_articles %}
+                <li>
+                    <a href="{{ l.make_url()|safe }}">{{ l.title|safe }}</a>
+                    <br />
+                    {{ l.description|safe }}
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}

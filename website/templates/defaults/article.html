@@ -1,0 +1,10 @@
+{% extends 'defaults/_base.html' %}
+
+{% block article_title %}{{ article.get_section().title|safe }}{% endblock %}
+
+{% block html_body %}
+    <article>
+        <h1>{{ article.title|safe }}</h1>
+        {{- article.body|safe }}
+    </article>
+{% endblock %}

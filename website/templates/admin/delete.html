@@ -1,0 +1,16 @@
+{% extends 'admin/_base.html' %}
+{% import 'admin/_form_macros.html' as form_macros %}
+
+{% block sidebar -%}
+    {%- for bar in sidebars -%}
+        {% include 'admin/sidebars/' + bar + '.html' %}
+    {%- endfor %}
+{%- endblock %}
+
+{% block main_interface %}
+<h2>Confirm Delete</h2>
+<form action="." method="post">
+    <p class="form-description">{{ ui_description }}</p>
+    {{ form_macros.form_bottom(csrf_token=csrf_token, submit_text=delete_text if delete_text else 'Delete Object', cancel_url=cancel_url if cancel_url else None) }}
+</form>
+{% endblock %}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{% block title_head %}Base Template{% endblock %}</title>
+        <link rel="stylesheet" href="{{ h.static('css/default.css') }}" />
+        
+        <script src="{{ h.static('js/jquery-3.1.js') }}"></script>
+        <script src="{{ h.static('js/generic-actions.js') }}"></script>
+    </head>
+    <body>
+        <header id="site-header">
+            <h1>{% block title_body %}Base Template{% endblock %}</h1>
+            
+            <div id="site-tools">
+                <div id="intro-search">
+                    <form action="#" method="get">
+                        <h2><label for="search-terms">Search This Website</label></h2>
+                        <p>
+                            <input type="text" id="search-terms" name="q" />
+                            <input type="submit" value="Go" />
+                        </p>
+                    </form>
+                    
+                    <p>Sed mattis ex eget diam luctus, id rhoncus mauris rhoncus. Pellentesque semper feugiat velit tristique placerat. Morbi viverra viverra laoreet.</p>
+                </div>
+                
+                <ul>
+                    <li><a href="{{ reverse('s13cms:ui_tester') }}">Home</a></li>
+                    <li><a href="#">Section One</a></li>
+                    <li><a href="#">Another Place</a></li>
+                    <li><a href="#">Otro Puesto</a></li>
+                    <li><a href="#">For Good Measure</a></li>
+                </ul>
+                
+                <div id="copyright-info">
+                    <p>Copyright © 2016 Arielle B Cruz. All rights reserved.</p>
+                </div>
+            </div>
+        </header>
+        
+        <p>The top most thingie...</p>
+        {% for x in range(20) %}
+        <p>WTF?!</p>
+        {% endfor %}
+    </body>
+</html>
