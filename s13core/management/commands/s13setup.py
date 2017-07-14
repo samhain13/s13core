@@ -1,7 +1,10 @@
+from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from s13core.settings.models import Setting, ContactInfo, CopyrightInfo
-from s13core.content_management.models import User
+
+from s13core.settings.models import ContactInfo
+from s13core.settings.models import CopyrightInfo
+from s13core.settings.models import Setting
 
 
 class Command(BaseCommand):
@@ -17,13 +20,24 @@ class Command(BaseCommand):
         call_command('makemigrations')
         call_command('migrate')
         self.stdout.write('** Creating the main superuser account.')
-        call_command('createsuperuser')
+        self._create_superuser()
 
     def create_initial_settings(self):
         self.stdout.write('** Collecting initial settings values.')
         site_title = self._prompt_info('Website Title')
         site_description = self._prompt_info('Description', False)
         site_keywords = self._prompt_info('Keywords', False)
+        # Make sure we have no Initial Settings.
+        old_inits = Setting.objects.filter(name='Initial Settings')
+        if old_inits:
+            self.stdout.write('** Old Initial Settings found, moving...')
+            for o in old_inits:
+                old_name = o.name
+                o.name = '{} - {}'.format(old_name, o.pk)
+                o.save()
+                self.stdout.write(
+                    '   - Moved "{}" to "{}"'.format(old_name, o.name)
+                )
         s = Setting(
             name='Initial Settings', is_active=True, title=site_title,
             description=site_description, keywords=site_keywords,
@@ -43,17 +57,44 @@ class Command(BaseCommand):
         return contact
 
     def _create_copyright_statement(self):
-        statement = self._prompt_info('Copyright Statement')
-        if self._prompt_info('Use Creative Commons? [yes/no]')\
-                .lower().startswith('y'):
+        statement = self._prompt_info('Copyright Statement', False)
+        if self._prompt_yesno('Use Creative Commons?'):
             cl = 'Creative Commons Attribution Share-Alike License'
             lc = 'https://creativecommons.org/licenses/by-sa/4.0/legalcode'
         else:
             cl = ''
             lc = ''
-        co = CopyrightInfo(statement=statement, license=cl, link=lc)
-        co.save()
-        return co
+        # Try to use an existing copyright statement, if possible.
+        old_statement = CopyrightInfo.objects.filter(
+            statement=statement, license=cl).last()
+        if old_statement:
+            return old_statement
+        else:
+            co = CopyrightInfo(statement=statement, license=cl, link=lc)
+            co.save()
+            return co
+
+    def _create_superuser(self):
+        username = self._prompt_info('Username')
+        email = self._prompt_info('Email')
+        password = self._prompt_info('Password')
+        user = User.objects.filter(username=username).first()
+        if user:
+            self.stdout.write(
+                '** Username "{}" already exists.'.format(username))
+            if self._prompt_yesno('Would you like to save your new info?'):
+                user.email = email
+                user.set_password(password)
+                user.save()
+        else:
+            user = User.objects.create_user(
+                username=username,
+                password=password,
+                email=email
+            )
+            user.is_superuser = True
+            user.is_staff = True
+            user.save()
 
     def _prompt_info(self, question, is_required=True):
         p = '{}{}: '.format(question, ' (required)' if is_required else '')
@@ -62,3 +103,8 @@ class Command(BaseCommand):
             while not s:
                 s = input(p)
         return s
+
+    def _prompt_yesno(self, question):
+        return self._prompt_info(
+            '{} [yes/no]'.format(question)
+        ).lower().startswith('y')
