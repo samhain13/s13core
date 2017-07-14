@@ -131,12 +131,16 @@ class Setting(models.Model):
 
 class ContactInfo(models.Model):
     contact_name = models.CharField(max_length=255, default='Juan de la Cruz')
-    address = models.TextField(null=True, blank=True,
-                               help_text='Physical address. HTML allowed.')
-    email = models.CharField(max_length=255, null=True, blank=True,
-                             help_text='Comma-separated email addresses.')
-    phone = models.CharField(max_length=255, null=True, blank=True,
-                             help_text='Comma-separated phone numbers.')
+    address = models.TextField(
+        null=True, blank=True, help_text='Physical address. HTML allowed.')
+    email = models.CharField(
+        max_length=255, null=True, blank=True,
+        help_text='Comma-separated email addresses.'
+    )
+    phone = models.CharField(
+        max_length=255, null=True, blank=True,
+        help_text='Comma-separated phone numbers.'
+    )
     weight = models.IntegerField(default=0, blank=True)
 
     def __str__(self):
