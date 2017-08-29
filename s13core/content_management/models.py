@@ -218,12 +218,10 @@ class Article(models.Model):
     def get_children(self, exclude_private=True):
         '''Returns a list of Articles whose parent is the current one.'''
 
+        filters = {'parent': self}
         if exclude_private:
-            return list(Article.objects.filter(parent=self, is_public=True)
-                        .order_by(self.sort_children))
-        else:
-            return list(Article.objects.filter(parent=self)
-                        .order_by(self.sort_children))
+            filters['is_public'] = True
+        return Article.objects.filter(**filters).order_by(self.sort_children)
 
     def get_progeny(self):
         '''Returns a list of an Article's descendants.'''
@@ -246,12 +244,11 @@ class Article(models.Model):
         # We use weight as default because Articles that have no parent are
         # sections; and sections should be intentionally ordered.
         sorter = self.parent.sort_children if self.parent else 'weight'
+        filters = {'parent': self.parent}
         if exclude_private:
-            return list(Article.objects.filter(parent=self.parent,
-                        is_public=True).order_by(sorter))
+            filters['is_public'] = True
         else:
-            return list(Article.objects.filter(parent=self.parent)
-                        .order_by(sorter))
+            return Article.objects.filter(**filters).order_by(sorter)
 
     def make_url(self):
         '''Generates a URL that is appropriate for this article.'''
