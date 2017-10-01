@@ -3,6 +3,7 @@
 import os
 from markdown import markdown
 
+from django.apps import apps
 from django.conf import settings as s
 from django.utils import timezone
 
@@ -18,6 +19,15 @@ def format_date(date, with_time=False):
     if with_time:
         f = '{} {}'.format(f, '%H:%M:%S')
     return date.strftime(f)
+
+
+def get_latest_articles(limit=12):
+    '''Returns a selection of the latest Article objects (excluding sections).
+    Typically used by templates with customized content selection.
+    '''
+    Article = apps.get_model('content_management', 'Article')
+    return Article.objects.filter(is_public=True).exclude(
+        parent=None).order_by('-pk')[:limit]
 
 
 def get_now():
