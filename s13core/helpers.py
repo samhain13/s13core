@@ -21,6 +21,17 @@ def format_date(date, with_time=False):
     return date.strftime(f)
 
 
+def get_contact_info(contact_name):
+    '''Returns a ContactInfo instance based on contact_name. If multiple
+    objects are selectable, the last instance based on weight is returned.
+    '''
+    ContactInfo = apps.get_model('settings', 'ContactInfo')
+    info = ContactInfo.objects.filter(contact_name=contact_name).last()
+    if not info:
+        return ContactInfo()
+    return info
+
+
 def get_latest_articles(limit=12):
     '''Returns a selection of the latest Article objects (excluding sections).
     Typically used by templates with customized content selection.
