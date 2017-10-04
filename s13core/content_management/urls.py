@@ -3,6 +3,9 @@ from django.conf.urls import url
 from s13core.content_management import views as v
 
 urlpatterns = [
+    url(r'^keyword-search/$',
+        v.KeywordSearchView.as_view(),
+        name='keyword-search'),
     url(r'^(?P<section_slug>[\w\-]+)/(?P<article_slug>[\w\-]+)/$',
         v.ArticleView.as_view(),
         name='article'),

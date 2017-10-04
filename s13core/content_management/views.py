@@ -28,16 +28,23 @@ class S13CMSMixin(object):
             return None
         return int(p) if p.isdigit() and p != '1' else False
 
-    def paginate_children(self):
+    def paginate_children(self, selection=None, num_pages=0):
         '''Paginates the selected Article's children according to its settings.
         Returns one of two things: a Paginator instance on success;
         None if a "?p=" argument given is invalid.
+
+        @selection and @num_pages are provided by the KeywordSearchView because
+        that view is not really based on an article, so there is nothing to
+        provide values for those arguments internally.
         '''
-        if not self.article.include_children:
-            return None
-        p = Paginator(
-            self.article.get_children(), self.article.include_children
-        )
+        if not selection:
+            selection = self.article.get_children()
+        if not num_pages:
+            if self.article.include_children:
+                num_pages = self.article.include_children
+            else:
+                return None
+        p = Paginator(selection, num_pages)
         page_num = self.get_page_number()
         if type(page_num) is int:
             if p.num_pages < page_num or page_num < 1:
@@ -74,6 +81,8 @@ class S13CMSMixin(object):
             self.settings.window_title = '{} ({}) | {}'.format(
                 self.article.title, self.section.title, self.settings.title
             )
+        elif view_name == 'KeywordSearchView':
+            self.settings.window_title = 'Keyword Search Results'
         else:
             self.settings.window_title = self.settings.title
         # Take note of the current URL so we can pass it around the view.
@@ -152,6 +161,39 @@ class SectionView(S13CMSMixin, TemplateView):
         self.template_name = self.get_template()
         return super(SectionView, self).get(
             self.request, *self.args, **self.kwargs)
+
+
+class KeywordSearchView(S13CMSMixin, TemplateView):
+    '''Resonds with a Search Results page.'''
+
+    template_name = 'defaults/keyword-search.html'
+
+    def get(self, request, *args, **kwargs):
+        self.settings = Setting.objects.get(is_active=True)
+        self.sections = Article.objects.get_sections()
+        self.article = Article(
+            slug='keyword-search',
+            title='Keyword Search Results',
+            body='',
+            description='Keyword search results page.',
+            keywords='keywords search results'
+        )
+        terms = request.GET.get('q', None)
+        print(terms)
+        if not terms:
+            selection = []
+        else:
+            selection = Article.objects.search(terms)
+        self.articles = self.paginate_children(selection, 1)
+        self.tweak_settings(self.__class__.__name__)
+        self.template_name = self.get_template()
+        return super(KeywordSearchView, self).get(
+            self.request, *self.args, **self.kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(KeywordSearchView, self).get_context_data(**kwargs)
+        context['terms'] = self.request.GET.get('q', '')
+        return context
 
 
 class ArticleView(S13CMSMixin, TemplateView):

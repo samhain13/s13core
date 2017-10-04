@@ -32,15 +32,6 @@ def get_contact_info(contact_name):
     return info
 
 
-def get_latest_articles(limit=12):
-    '''Returns a selection of the latest Article objects (excluding sections).
-    Typically used by templates with customized content selection.
-    '''
-    Article = apps.get_model('content_management', 'Article')
-    return Article.objects.filter(is_public=True).exclude(
-        parent=None).order_by('-pk')[:limit]
-
-
 def get_now():
     '''Generates a timezone-aware datetime object.'''
 
@@ -84,7 +75,7 @@ def make_nav_items(articles, current_url='/', classes=''):
 
 def make_paginator_nav(
         page, base_url, prev_text='Previous', next_text='Next',
-        nav_id=None, classes=''):
+        nav_id=None, classes='', extra_args=''):
     '''Returns a nav element with class "paginator-nav" containing previous
     and next links, as well as other information.
 
@@ -95,6 +86,7 @@ def make_paginator_nav(
         next_text - text value for the next page link
         nav_id - optional ID for the nav element to be created
         classes - optional, additional classes for the nav element
+        extra_args - optional, additional URL parameters like &amp;q=terms
     '''
     nav = '<nav'
     if nav_id:
@@ -104,21 +96,26 @@ def make_paginator_nav(
         nav += ' {}'.format(classes)
     nav += '">'
     if page.has_previous():
-        nav += '<a href="{}{}" rel="prev">{}</a>'.format(
-            base_url,
-            '?p={}'.format(page.previous_page_number())
-            if page.previous_page_number() > 1 else '',
-            prev_text
-        )
+        prev_link = base_url
+        if page.previous_page_number() > 1:
+            prev_link += '?p='.format(page.previous_page_number())
+            if extra_args:
+                prev_link += extra_args
+        else:
+            if extra_args:
+                # We're expecting prev_link to start with `&amp;`.
+                prev_link += '?{}'.format(extra_args[5:])
+        nav += '<a href="{}" rel="prev">{}</a>'.format(prev_link, prev_text)
     else:
         nav += '<span class="prev">{}</span>'.format(prev_text)
     nav += '<span class="middle">Page {} of {}</span>'.format(
         page.number, page.paginator.num_pages
     )
     if page.has_next():
-        nav += '<a href="{}?p={}" rel="next">{}</a>'.format(
+        nav += '<a href="{}?p={}{}" rel="next">{}</a>'.format(
             base_url,
             page.next_page_number(),
+            extra_args,
             next_text
         )
     else:

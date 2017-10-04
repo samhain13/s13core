@@ -54,6 +54,14 @@ class ArticleManager(models.Manager):
             return None, None
         return section, article
 
+    def search(self, term):
+        '''Returns a list of articles that have @term in their keywords.'''
+
+        return [
+            x for x in Article.objects.filter(is_public=True)
+            if term in x.get_keyword_list()
+        ]
+
     def _select_by_filter(self, **kwargs):
         '''Multi-model selector for finding sub-classed Articles.'''
         # If return_all is included in kwargs, don't return just one item
@@ -222,6 +230,13 @@ class Article(models.Model):
         if exclude_private:
             filters['is_public'] = True
         return Article.objects.filter(**filters).order_by(self.sort_children)
+
+    def get_keyword_list(self):
+        '''Returns a list of comma-separated keywords.'''
+
+        if not self.keywords:
+            return []
+        return [x.strip() for x in self.keywords.split(',')]
 
     def get_progeny(self):
         '''Returns a list of an Article's descendants.'''

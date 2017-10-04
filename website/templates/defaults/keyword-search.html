@@ -1,0 +1,30 @@
+{% extends 'defaults/_base.html' %}
+
+{% block html_body %}
+<h2>Search Results</h2>
+{%- if articles %}
+<div class="tombstones">
+    {%- for a in articles.object_list %}
+    <article>
+        <h1>
+            <a href="{{ a.make_url() }}">{{ a.title|safe }}</a>
+        </h1>
+        <div class="article-pic">
+            <a href="{{ a.make_url() }}">
+            {%- if a.image %}
+                <img src="{{ a.image.url }}" alt="{{ a.image.alt_text|safe }}" />
+            {%- else %}
+                <img src="/static/res/no-image.jpg" alt="No image." />
+            {%- endif %}
+            </a>
+        </div>
+        <p>{{ a.description|safe }}</p>
+        <p><small>{{ a.date_made_text }}</small></p>
+    </article>
+    {%- endfor %}
+</div>
+{{ h.make_paginator_nav(articles, article.make_url(), extra_args='&amp;q=' + terms)|safe }}
+{%- else %}
+<p>No articles were found.</p>
+{%- endif %}
+{% endblock %}
