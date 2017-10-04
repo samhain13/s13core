@@ -238,6 +238,20 @@ class Article(models.Model):
             return []
         return [x.strip() for x in self.keywords.split(',')]
 
+    def get_previous_and_next(self):
+        '''Returns the previous and next article based on the parent
+        ordering.
+        '''
+        previous = None
+        next = None
+        siblings = list(self.get_siblings())
+        index = siblings.index(self)
+        if index > 0:
+            previous = siblings[index - 1]
+        if index < len(siblings) - 1:
+            next = siblings[index + 1]
+        return previous, next
+
     def get_progeny(self):
         '''Returns a list of an Article's descendants.'''
 
@@ -262,8 +276,7 @@ class Article(models.Model):
         filters = {'parent': self.parent}
         if exclude_private:
             filters['is_public'] = True
-        else:
-            return Article.objects.filter(**filters).order_by(sorter)
+        return Article.objects.filter(**filters).order_by(sorter)
 
     def make_url(self):
         '''Generates a URL that is appropriate for this article.'''

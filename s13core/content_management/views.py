@@ -221,6 +221,8 @@ class ArticleView(S13CMSMixin, TemplateView):
         # The Article's section needs to be passed into the context.
         context = super(ArticleView, self).get_context_data(**kwargs)
         context['section'] = self.section
+        context['previous_article'], context['next_article'] = \
+            self.article.get_previous_and_next()
         return context
 
 
