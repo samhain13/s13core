@@ -111,8 +111,8 @@ def make_paginator_nav(
             prev_text
         )
     else:
-        nav += '<span>{}</span>'.format(prev_text)
-    nav += '<span>Page {} of {}</span>'.format(
+        nav += '<span class="prev">{}</span>'.format(prev_text)
+    nav += '<span class="middle">Page {} of {}</span>'.format(
         page.number, page.paginator.num_pages
     )
     if page.has_next():
@@ -122,7 +122,7 @@ def make_paginator_nav(
             next_text
         )
     else:
-        nav += '<span>{}</span>'.format(next_text)
+        nav += '<span class="next">{}</span>'.format(next_text)
     nav += '</nav>\n'
     return nav
 
