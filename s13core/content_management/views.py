@@ -87,6 +87,8 @@ class S13CMSMixin(object):
             self.settings.window_title = self.settings.title
         # Take note of the current URL so we can pass it around the view.
         self.settings.current_url = self.article.make_url()
+        # Override the description.
+        self.settings.description = self.article.description
         # Append website keywords if desired.
         if self.settings.append_keywords:
             self.settings.keywords = '{}, {}'.format(
