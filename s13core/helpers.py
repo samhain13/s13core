@@ -1,9 +1,8 @@
 '''General helpers for all s13core submodules.'''
 
 import os
-from markdown import markdown
+from markdown import markdown  # Flake8 unused warning but jinja2env needs it.
 
-from django.apps import apps
 from django.conf import settings as s
 from django.utils import timezone
 
@@ -19,17 +18,6 @@ def format_date(date, with_time=False):
     if with_time:
         f = '{} {}'.format(f, '%H:%M:%S')
     return date.strftime(f)
-
-
-def get_contact_info(contact_name):
-    '''Returns a ContactInfo instance based on contact_name. If multiple
-    objects are selectable, the last instance based on weight is returned.
-    '''
-    ContactInfo = apps.get_model('settings', 'ContactInfo')
-    info = ContactInfo.objects.filter(contact_name=contact_name).last()
-    if not info:
-        return ContactInfo()
-    return info
 
 
 def get_now():
