@@ -54,6 +54,12 @@ class Setting(models.Model):
         help_text='Number of items to show, if any.',
         verbose_name='Items'
     )
+    keywords_search_items = models.IntegerField(
+        default=12,
+        blank=True,
+        help_text='Number of search results to show per page, if any.',
+        verbose_name='Search Results Items'
+    )
     nohome_title = models.CharField(
         max_length=128,
         null=True,

@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 
 from jinja2 import Template
@@ -55,12 +56,24 @@ class ArticleManager(models.Manager):
         return section, article
 
     def search(self, term):
-        '''Returns a list of articles that have @term in their keywords.'''
-
-        return [
-            x for x in Article.objects.filter(is_public=True)
-            if term in x.get_keyword_list()
-        ]
+        '''Returns a list of articles that have @term in their title, slug,
+        or keywords. Website sections and private articles are excluded.
+        Results are ordered by date of last modification, latest first.
+        '''
+        # We require at least 3 characters.
+        if len(term) < 3:
+            return []  # We need to return an iterable, not None.
+        return Article.objects.filter(
+            Q(title__icontains=term)|
+            Q(slug__icontains=term)|
+            Q(keywords__icontains=term)
+        ).exclude(
+            is_public=False
+        ).exclude(
+            parent=None
+        ).order_by(
+            '-date_edit'
+        )
 
     def _select_by_filter(self, **kwargs):
         '''Multi-model selector for finding sub-classed Articles.'''

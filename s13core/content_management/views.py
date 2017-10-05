@@ -181,12 +181,12 @@ class KeywordSearchView(S13CMSMixin, TemplateView):
             keywords='keywords search results'
         )
         terms = request.GET.get('q', None)
-        print(terms)
         if not terms:
             selection = []
         else:
             selection = Article.objects.search(terms)
-        self.articles = self.paginate_children(selection, 1)
+        self.articles = self.paginate_children(
+            selection, self.settings.keywords_search_items)
         self.tweak_settings(self.__class__.__name__)
         self.template_name = self.get_template()
         return super(KeywordSearchView, self).get(
