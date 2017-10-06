@@ -42,7 +42,7 @@
     </fieldset>
     
     <div class="hidden-inputs">
-    {%- for field in form.get_fields(['date_made', 'owner', 'parent']) %}
+    {%- for field in form.get_fields(['date_made', 'owner', 'parent', 'image']) %}
         {%- if field.name == 'parent' %}
         <input type="hidden" id="parent" name="parent" value="{% if parent_pk %}{{ parent_pk }}{% else %}{{ field.value() if field.value() else '' }}{% endif %}" />
         {%- elif field.name == 'owner' %}
