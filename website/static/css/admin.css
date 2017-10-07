@@ -136,6 +136,11 @@ a:focus, a:hover { text-decoration: underline; }
                 color: rgb(80,100,80);
                 font-size: 15px;
             }
+            .model-item-summary dd.pre {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: pre;
+            }
     .model-item-actions { flex-grow: 1; }
 
 

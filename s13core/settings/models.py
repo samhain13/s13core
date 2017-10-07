@@ -1,6 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 
+from jinja2 import Template
+
+import s13core
+from s13core import helpers as h
+
 
 class Setting(models.Model):
     # Basic Settings
@@ -151,6 +156,14 @@ class ContactInfo(models.Model):
 
     def __str__(self):
         return self.contact_name
+
+    @property
+    def address_html(self):
+        if self.address:
+            self.address = Template(self.address).render(s13=s13core)
+        else:
+            self.address = ''
+        return self.address
 
     class Meta:
         ordering = ['weight', 'contact_name']

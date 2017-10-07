@@ -167,6 +167,8 @@ def make_template_choices(more_extensions=[]):
 def make_tabs(text, tabs=1):
     '''Adds tabs to text for HTML formatting.'''
 
+    if text is None:
+        return ''
     return text.replace('\n', '\n{}'.format('    ' * tabs))
 
 
