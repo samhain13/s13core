@@ -176,6 +176,27 @@ def make_tabs(text, tabs=1):
     return text.replace('\n', '\n{}'.format('    ' * tabs))
 
 
+def make_video_iframe(source, classes=None, _id=None, add_referer=False):
+    '''Creates a div containing an iframe for embedded videos. Can actually
+    be used for iframes containing things other than videos but the function
+    was made for embedding YouTube videos.
+
+    Arguments:
+        source - URI of the iframe source
+        classes - a list of CSS classes for the container div
+        _id - optional, a CSS id for the container div (not the iframe)
+        add_referer - optional, removes referrerpolicy="no-referrer" if True
+    '''
+    if type(classes) in [list, tuple]:
+        classes.insert('video-iframe', 0)
+    else:
+        classes = ['video-iframe']
+    item_id = 'id="{}" '.format(_id) if _id else ''
+    referer_policy = '' if add_referer else ' referrerpolicy="no-referrer"'
+    div = '<div {}class="{}"><iframe src="{}"{}></iframe></div>'
+    return div.format(item_id, ' '.join(classes), source, referer_policy)
+
+
 def static(path_to_file):
     '''Prepends the STATIC_URL from settings to the given path.'''
 
