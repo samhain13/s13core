@@ -4,6 +4,7 @@ import os
 from markdown import markdown  # Flake8 unused warning but jinja2env needs it.
 
 from django.conf import settings as s
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 
