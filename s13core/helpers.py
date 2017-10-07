@@ -56,7 +56,7 @@ def make_external_link(href, link_html, item_classes=None, item_id=None):
     return a.format(href, item_classes, item_id, link_html)
 
 
-def make_nav_items(articles, current_url='/', classes=''):
+def make_nav_items(articles, current_url='/', classes='', use_slugs=False):
     '''Returns a list of navigation items as HTML anchors.
 
     Arguments:
@@ -64,6 +64,8 @@ def make_nav_items(articles, current_url='/', classes=''):
         current_url - serves as a comparison value for determining whether
             a generated link will have the "active" class
         classes - optional CSS classes for each link generated
+        use_slugs - if set to True, render the article's slug instead of
+            the title
     '''
     items = []
     for item in articles:
@@ -75,8 +77,11 @@ def make_nav_items(articles, current_url='/', classes=''):
         )
         if css_classes == ' class=""':
             css_classes = ''
+        link_text = item.slug if use_slugs else item.title
+        if item.is_homepage:
+            link_text = 'Home'
         items.append('<a href="{}"{}>{}</a>'.format(item_url, css_classes,
-                     'Home' if item.is_homepage else item.title))
+                     link_text))
     return items
 
 
