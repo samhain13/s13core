@@ -1,7 +1,9 @@
 '''General helpers for all s13core submodules.'''
 
+# Flake8 will complain about a couple of imports but those are needed by
+# jinja2env and used by the templates.
 import os
-from markdown import markdown  # Flake8 unused warning but jinja2env needs it.
+from markdown import markdown
 
 from django.conf import settings as s
 from django.core.urlresolvers import reverse
@@ -36,6 +38,22 @@ def is_current_section(current_article, section_slug):
     current_section = current_article.get_section() \
         if current_article.parent else current_article
     return current_section.slug == section_slug
+
+
+def make_external_link(href, link_html, item_classes=None, item_id=None):
+    '''Convenience function; creates an anchor with rel="noopener noreferrer"
+    and target="_blank. Should be marked 'safe' in the template.".
+    '''
+    if type(item_classes) in [list, tuple]:
+        item_classes = ' class="{}"'.format(' '.join(item_classes))
+    else:
+        item_classes = ''
+    if item_id:
+        item_id = ' id="{}"'.format(item_id)
+    else:
+        item_id = ''
+    a = '<a href="{}" target="_blank" rel="noopener noreferrer"{}{}>{}</a>'
+    return a.format(href, item_classes, item_id, link_html)
 
 
 def make_nav_items(articles, current_url='/', classes=''):
