@@ -6,7 +6,6 @@ import os
 from markdown import markdown
 
 from django.conf import settings as s
-from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 
