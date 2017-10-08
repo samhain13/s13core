@@ -79,8 +79,8 @@ def make_nav_items(articles, current_url='/', classes='', use_slugs=False):
         link_text = item.slug if use_slugs else item.title
         if item.is_homepage:
             link_text = 'Home'
-        items.append('<a href="{}"{}>{}</a>'.format(item_url, css_classes,
-                     link_text))
+        items.append('<a href="{}"{}><span>{}</span></a>'.format(
+            item_url, css_classes, link_text))
     return items
 
 
