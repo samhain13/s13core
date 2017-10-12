@@ -3,6 +3,7 @@
 # Flake8 will complain about a couple of imports but those are needed by
 # jinja2env and used by the templates.
 import os
+import pytz
 from markdown import markdown
 
 from django.conf import settings as s
@@ -16,9 +17,10 @@ def format_date(date, with_time=False):
         date - datetime object
         with_time - boolean; if True, include the time
     '''
+    date = date.astimezone(pytz.timezone(s.TIME_ZONE))
     f = '%d %B %Y'
     if with_time:
-        f = '{} {}'.format(f, '%H:%M:%S')
+        f = '{} - {}'.format(f, '%H:%M')
     return date.strftime(f)
 
 
