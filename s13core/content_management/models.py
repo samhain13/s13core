@@ -314,9 +314,6 @@ class Article(models.Model):
     def save(self, *args, **kwargs):
         if self.pk:
             a = Article.objects.get(pk=self.pk)
-            if a.date_made.strftime('%Y%m%d%H%M%S') != \
-                    self.date_made.strftime('%Y%m%d%H%M%S'):
-                raise ValidationError('Creation date is read-only.')
             if a == self.parent:
                 raise ValidationError('Article cannot be its own parent.')
         if not self.date_made:
