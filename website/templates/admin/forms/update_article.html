@@ -87,6 +87,7 @@
                         var label = $('label[for="' + input.prop('id') + '"]');
                         var text = label.text().replace(/  /g, '').replace('*', '');
                         ul.append($('<li class="error"><span>' + text + ' is required.</span></li>'));
+                        input.parent().parent().parent().show();
                     }
                 });
                 if (ul.find('li').length >= 1) {
