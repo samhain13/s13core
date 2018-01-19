@@ -13,6 +13,7 @@ from django.views.generic.edit import UpdateView
 
 from s13core.content_management.models import Article
 from s13core.content_management.models import FileAsset
+from s13core.helpers import convert_bytes
 
 from ..forms.home import ChangeInformationForm
 from ..forms.home import ChangePasswordForm
@@ -54,6 +55,31 @@ class Dashboard(S13UserRequiredMixin, TemplateView):
                 'pct_all': pct_all
             })
         s['sections_count'] = len(s['sections'])
+
+        # FileAsset statistics.
+        s['asset_types'] = {'unknown': {'count': 0, 'size': 0}}
+        s['assets_broken'] = 0
+        s['assets_total'] = 0
+        s['assets_total_size'] = 0
+        for fa in FileAsset.objects.all():
+            s['assets_total'] += 1
+            ext = fa.extension if fa.extension else 'unknown'
+            if ext not in s['asset_types']:
+                s['asset_types'][ext] = {'count': 0, 'size': 0}
+            s['asset_types'][ext]['count'] += 1
+            if fa.on_disk:
+                size = fa.size
+                s['asset_types'][ext]['size'] += size
+                s['assets_total_size'] += size
+            else:
+                s['assets_broken'] += 1
+        for k, v in s['asset_types'].items():
+            v['pct_all'] = int((v['count'] / s['assets_total']) * 100)
+            v['pct_size'] = int((v['size'] / s['assets_total_size']) * 100)
+            v['size'] = '{0:.2f}MB'.format(convert_bytes(v['size'], 'mb'))
+        # Finally.
+        s['assets_total_size'] = '{0:.2f}MB'.format(
+            convert_bytes(s['assets_total_size'], 'mb'))
         return s
 
 

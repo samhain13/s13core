@@ -10,6 +10,25 @@ from django.conf import settings as s
 from django.utils import timezone
 
 
+def convert_bytes(bytes, unit='kb'):
+    '''Converts a given number of bytes into different unit values.
+
+    Arguments:
+        bytes - integer
+        unit - string: bits, kb, mb, gb; default is kb
+    '''
+    if unit == 'bits':
+        return bytes * 8
+    elif unit == 'kb':
+        return bytes / 1024
+    elif unit == 'mb':
+        return bytes / 1048576
+    elif unit == 'gb':
+        return bytes / 1073741824
+    else:
+        return bytes
+
+
 def format_date(date, with_time=False):
     '''Generates a formatted date based on a datetime object.
 

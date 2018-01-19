@@ -64,8 +64,8 @@ class ArticleManager(models.Manager):
         if len(term) < 3:
             return []  # We need to return an iterable, not None.
         return Article.objects.filter(
-            Q(title__icontains=term)|
-            Q(slug__icontains=term)|
+            Q(title__icontains=term) |
+            Q(slug__icontains=term) |
             Q(keywords__icontains=term)
         ).exclude(
             is_public=False
@@ -372,11 +372,25 @@ class FileAsset(models.Model):
         super(FileAsset, self).delete()
 
     @property
+    def on_disk(self):
+        return os.path.isfile(self.path_on_disk)
+
+    @property
     def path_on_disk(self):
         if self.media_file:
             return self.media_file.path
         else:
             return None
+
+    @property
+    def size(self):
+        '''Returns the file size in bytes.'''
+
+        file_path = self.path_on_disk
+        if os.path.isfile(file_path):
+            return os.path.getsize(file_path)
+        else:
+            return 0
 
     @property
     def url(self):

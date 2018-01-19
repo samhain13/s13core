@@ -26,7 +26,7 @@
 
 <h3>Article Statistics</h3>
 
-<div id="stats-articles">
+<div id="stats-articles" class="stats-display">
     {% for section in stats['sections'] %}
     <dl>
         <dt>{{ section.title }}</dt>
@@ -43,6 +43,29 @@
         <span>Total Articles: {{ stats['articles_count'] }}</span> |
         <span>Published Articles: {{ stats['articles_public'] }}</span> |
         <span>Draft Articles: {{ stats['articles_draft'] }}</span>
+    </p>
+</div>
+
+<h3>File Asset Statistics by Extension</h3>
+
+<div id="stats-fileassets" class="stats-display">
+    {% for extension, details in stats['asset_types'].items() %}
+        {%- if details.count %}
+    <dl>
+        <dt>{{ extension }}</dt>
+        <dd style="min-width: 150px; width: {{ details.pct_all - 20 }}%">
+            <div>
+                Found {{ details.count }} file(s) worth {{ details.size }}<br />
+                or {{ details.pct_all }}% of total files and {{ details.pct_size }}% of library.
+            </div>
+        </dd>
+    </dl>
+        {%- endif %}
+    {% endfor %}
+    <p>
+        <span>Total File Assets: {{ stats['assets_total'] }}</span> |
+        <span>Total Library Size: {{ stats['assets_total_size'] }}</span> |
+        <span>Total Broken: {{ stats['assets_broken'] }}</span>
     </p>
 </div>
 {% endblock %}
