@@ -74,8 +74,14 @@ class Dashboard(S13UserRequiredMixin, TemplateView):
             else:
                 s['assets_broken'] += 1
         for k, v in s['asset_types'].items():
-            v['pct_all'] = int((v['count'] / s['assets_total']) * 100)
-            v['pct_size'] = int((v['size'] / s['assets_total_size']) * 100)
+            if s['assets_total']:
+                v['pct_all'] = int((v['count'] / s['assets_total']) * 100)
+            else:
+                v['pct_all'] = '-'
+            if s['assets_total_size']:
+                v['pct_size'] = int((v['size'] / s['assets_total_size']) * 100)
+            else:
+                v['pct_size'] = '-'
             v['size'] = '{0:.2f}MB'.format(convert_bytes(v['size'], 'mb'))
         # Finally.
         s['assets_total_size'] = '{0:.2f}MB'.format(
