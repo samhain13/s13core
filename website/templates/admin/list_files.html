@@ -38,6 +38,22 @@
         <dd>{{ fileasset.description }}</dd>
         <dt>Media File</dt>
         <dd>{{ fileasset.media_file }}</dd>
+        <dt>Associated Articles</dt>
+        <dd>
+            <ul>
+            {%- for a in fileasset.user_articles %}
+                <li>
+                    <small>[
+                        <a href="{{ reverse('s13admin:update_article', args=[a.pk]) }}">Update</a> |
+                        <a href="{{ a.make_url() }}" target="_blank">View</a>
+                    ]</small>
+                    {{ a.title }}
+                </li>
+            {%- else %}
+                <li>None</li>
+            {%- endfor %}
+            </ul>
+        </dd>
     </dl>
     <nav class="model-item-actions">
         <h3>Navigation</h3>

@@ -393,6 +393,12 @@ class FileAsset(models.Model):
             return 0
 
     @property
+    def user_articles(self):
+        '''Returns a selection of Article objects that use this FileAsset.'''
+
+        return Article.objects.filter(Q(media=self) | Q(image=self))
+
+    @property
     def url(self):
         if self.media_file:
             return self.media_file.url

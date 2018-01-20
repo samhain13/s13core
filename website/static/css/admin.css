@@ -141,6 +141,13 @@ a:focus, a:hover { text-decoration: underline; }
                 text-overflow: ellipsis;
                 white-space: pre;
             }
+        .model-item-summary ul {
+            list-style-type: square;
+            padding: 0px 0px 10px 20px;
+        }
+            .model-item-summary ul small {
+                margin-right: 9px;
+            } 
     .model-item-actions { flex-grow: 1; }
 
 
