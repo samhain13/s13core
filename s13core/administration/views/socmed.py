@@ -21,7 +21,7 @@ class SocMedListMixin(S13UserRequiredMixin):
     def get_context_data(self, **kwargs):
         context = super(SocMedListMixin, self).get_context_data(**kwargs)
         context['mode'] = self.mode
-        context['mode_title'] = self.title
+        context['ui_title'] = self.title
         return context
 
 
