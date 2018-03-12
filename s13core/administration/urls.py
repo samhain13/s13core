@@ -4,6 +4,7 @@ from .views import articles
 from .views import fileassets
 from .views import home
 from .views import settings
+from .views import socmed
 
 
 urlpatterns = [
@@ -70,6 +71,23 @@ urlpatterns = [
         r'^fileassets/update-fileasset/(?P<pk>[\d]+)/$',
         fileassets.FileAssetUpdate.as_view(),
         name='update_fileasset'
+    ),
+
+    # ------------- Social Media Collector views.
+    url(
+        r'^social-media/api-keys/$',
+        socmed.APIKeyList.as_view(),
+        name='socmedapikeys'
+    ),
+    url(
+        r'^social-media/feeds/$',
+        socmed.SocMedFeedList.as_view(),
+        name='socmedfeeds'
+    ),
+    url(
+        r'^social-media/processors/$',
+        socmed.SocMedProcessorList.as_view(),
+        name='socmedprocessors'
     ),
 
     # ------------- Settings views.
