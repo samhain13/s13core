@@ -11,7 +11,7 @@ from s13core.socmed_collector.models import SocMedProcessor
 
 from ..forms.socmed import APIKeyForm
 from ..forms.socmed import SocMedFeedForm
-from ..forms.socmed import SocMedProcessorForm 
+from ..forms.socmed import SocMedProcessorForm
 from ..mixins import S13UserRequiredMixin
 
 

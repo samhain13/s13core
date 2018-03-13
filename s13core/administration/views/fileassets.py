@@ -1,10 +1,7 @@
-from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
 from django.utils.http import urlencode
 from django.views.generic import ListView
-from django.views.generic import DetailView
-from django.views.generic import RedirectView
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.edit import UpdateView
@@ -13,7 +10,6 @@ from s13core.content_management.models import FileAsset
 
 from ..forms.fileassets import FileAssetForm
 from ..mixins import GenericCRUDMixin
-from ..mixins import S13UserRequiredMixin
 
 
 class FileAssetCRUDMixin(GenericCRUDMixin):
@@ -62,13 +58,11 @@ class FileAssetsList(FileAssetCRUDMixin, ListView):
                     extension__in=self.q.split('-')[-1].split('|')
                 )
             else:
-                pk = self.kwargs['pk'] if 'pk' in self.kwargs else '0'
                 return FileAsset.objects.filter(
                     Q(title__icontains=self.q) |
                     Q(description__icontains=self.q) |
                     Q(alt_text__icontains=self.q)
                 )
-                
         else:
             return FileAsset.objects.all()
 

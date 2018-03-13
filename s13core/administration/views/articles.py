@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
-from django.shortcuts import redirect
 from django.utils.http import urlencode
 from django.views.generic import ListView
 from django.views.generic import RedirectView
@@ -56,8 +55,8 @@ class ArticlesList(ArticlesCRUDMixin, ListView):
                     self.ui_title = 'Article {}'.format(
                         self.kwargs['mode'].title())
                     reverse_args.append(self.kwargs['mode'])
-                self.success_url = reverse_lazy('s13admin:detail_article',
-                    args=reverse_args)
+                self.success_url = reverse_lazy(
+                    's13admin:detail_article', args=reverse_args)
             except ObjectDoesNotExist:
                 messages.error(self.request, 'Article does not exist.')
         return super(ArticlesList, self).get(request, *args, **kwargs)
