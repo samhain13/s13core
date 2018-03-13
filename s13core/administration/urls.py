@@ -80,6 +80,21 @@ urlpatterns = [
         name='socmedapikeys'
     ),
     url(
+        r'^social-media/create-api-key/$',
+        socmed.APIKeyCreate.as_view(),
+        name='socmedapikeys_create'
+    ),
+    url(
+        r'^social-media/delete-api-key/(?P<pk>[\d]+)/$',
+        socmed.APIKeyDelete.as_view(),
+        name='socmedapikeys_delete'
+    ),
+    url(
+        r'^social-media/update-api-key/(?P<pk>[\d]+)/$',
+        socmed.APIKeyUpdate.as_view(),
+        name='socmedapikeys_update'
+    ),
+    url(
         r'^social-media/feeds/$',
         socmed.SocMedFeedList.as_view(),
         name='socmedfeeds'

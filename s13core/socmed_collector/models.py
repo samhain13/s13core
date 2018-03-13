@@ -37,6 +37,9 @@ class APIKey(SocMedModel):
     key = models.CharField(max_length=128, unique=True)
     label = models.CharField(max_length=64, unique=True)
 
+    class Meta:
+        verbose_name = 'API Key'
+
 
 class SocMedProcessor(SocMedModel):
     '''Stores some Python 3 code to be used for processing a downloaded
@@ -46,6 +49,9 @@ class SocMedProcessor(SocMedModel):
     uri = models.CharField(max_length=255)
     code = models.TextField()
     notes = models.TextField()
+
+    class Meta:
+        verbose_name = 'Social Media Feed Processor'
 
 
 class SocMedFeed(SocMedModel):
@@ -59,6 +65,9 @@ class SocMedFeed(SocMedModel):
     response = models.TextField()
     cms_section = models.ForeignKey(Article)
     processor = models.ForeignKey(SocMedProcessor)
+
+    class Meta:
+        verbose_name = 'Social Media Feed'
 
     @property
     def response_json(self):
