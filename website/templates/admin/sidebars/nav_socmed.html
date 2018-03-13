@@ -3,7 +3,9 @@
 {% if mode -%}
 <nav>
     {% if mode == 'apikey' -%}
-    <a href="{{ reverse('s13admin:socmedapikeys_create') }}" class="highlight">Create New API Key</a>
+    <a href="{{ reverse('s13admin:socmedapikeys_create') }}" class="highlight">Create New {{ ui_title[:-1] }}</a>
+    {% elif mode == 'socmedprocessor' -%}
+    <a href="{{ reverse('s13admin:socmedprocessors_create') }}" class="highlight">Create New {{ ui_title[:-1] }}</a>
     {% endif -%}
 </nav>
 

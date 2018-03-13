@@ -104,6 +104,21 @@ urlpatterns = [
         socmed.SocMedProcessorList.as_view(),
         name='socmedprocessors'
     ),
+    url(
+        r'^social-media/create-processor/$',
+        socmed.SocMedProcessorCreate.as_view(),
+        name='socmedprocessors_create'
+    ),
+    url(
+        r'^social-media/delete-processor/(?P<pk>[\d]+)/$',
+        socmed.SocMedProcessorDelete.as_view(),
+        name='socmedprocessors_delete'
+    ),
+    url(
+        r'^social-media/update-processor/(?P<pk>[\d]+)/$',
+        socmed.SocMedProcessorUpdate.as_view(),
+        name='socmedprocessors_update'
+    ),
 
     # ------------- Settings views.
     url(

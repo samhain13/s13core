@@ -63,6 +63,7 @@ class APIKeyList(SocMedListMixin, ListView):
 
 
 class APIKeyCreate(SocMedCRUDMixin, CreateView):
+    description = 'Create a new API Key.'
     form_class = APIKeyForm
     model = APIKey
     success_message = 'API Key created.'
@@ -86,6 +87,7 @@ class APIKeyDelete(SocMedCRUDMixin, DeleteView):
 
 
 class APIKeyUpdate(SocMedCRUDMixin, UpdateView):
+    description = 'Update this API Key.'
     form_class = APIKeyForm
     model = APIKey
     success_message = 'API Key updated.'
@@ -103,3 +105,36 @@ class SocMedProcessorList(SocMedListMixin, ListView):
     mode = 'socmedprocessor'
     model = SocMedProcessor
     title = 'Social Media Processors'
+
+
+class SocMedProcessorCreate(SocMedCRUDMixin, CreateView):
+    description = 'Create a new Social Media Feed Processor.'
+    form_class = SocMedProcessorForm
+    model = SocMedProcessor
+    success_message = 'Social Media Feed Processor created.'
+    success_url = reverse_lazy('s13admin:socmedprocessors')
+    title = 'Create Social Media Feed Processor'
+
+
+class SocMedProcessorDelete(SocMedCRUDMixin, DeleteView):
+    cancel_url = reverse_lazy('s13admin:socmedapikeys')
+    description = 'Are you sure you want to delete this Processor?'
+    model = SocMedProcessor
+    success_message = 'Social Media Feed Processor deleted.'
+    success_url = reverse_lazy('s13admin:socmedprocessors')
+    template_name = 'admin/delete.html'
+    title = 'Delete Social Media Feed Processor'
+
+    def post(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(SocMedProcessorDelete, self).post(
+            self.request, *self.args, **self.kwargs)
+
+
+class SocMedProcessorUpdate(SocMedCRUDMixin, UpdateView):
+    description = 'Update this Social Media Feed Processor.'
+    form_class = SocMedProcessorForm
+    model = SocMedProcessor
+    success_message = 'Social Media Feed Processor updated.'
+    success_url = reverse_lazy('s13admin:socmedprocessors')
+    title = 'Update Social Media Feed Processor'

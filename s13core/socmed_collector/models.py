@@ -46,8 +46,8 @@ class SocMedProcessor(SocMedModel):
     resource from a Social Media website using an API Key and account_id.
     '''
     label = models.CharField(max_length=64, unique=True)
-    uri = models.CharField(max_length=255)
-    code = models.TextField()
+    uri = models.CharField(max_length=255, verbose_name='API Endpoint URI')
+    code = models.TextField(verbose_name='Python Code')
     notes = models.TextField()
 
     class Meta:
