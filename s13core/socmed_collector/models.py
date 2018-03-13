@@ -59,12 +59,24 @@ class SocMedFeed(SocMedModel):
     processing instructions.
     '''
     label = models.CharField(max_length=64, unique=True)
-    api_key = models.ForeignKey(APIKey)
-    account_id = models.CharField(max_length=64)
+    account_id = models.CharField(
+        max_length=64,
+        verbose_name='Account ID'
+    )
+    api_key = models.ForeignKey(
+        APIKey,
+        verbose_name='API Key'
+    )
+    processor = models.ForeignKey(
+        SocMedProcessor,
+        verbose_name='Feed Processor'
+    )
     max_results = models.IntegerField(default=5)
-    response = models.TextField()
-    cms_section = models.ForeignKey(Article)
-    processor = models.ForeignKey(SocMedProcessor)
+    cms_section = models.ForeignKey(
+        Article,
+        verbose_name='Target Website Section'
+    )
+    response = models.TextField(null=True, blank=True)
 
     class Meta:
         verbose_name = 'Social Media Feed'

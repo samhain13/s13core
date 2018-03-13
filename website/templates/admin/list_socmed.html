@@ -7,30 +7,31 @@
 
 {% block main_interface %}
 <h2>{{ ui_title }}</h2>
+<p class="form-description">{{ ui_description|safe }}</p>
     {% for item in object_list %}
 <div class="model-item">
     <dl class="model-item-summary">
-        {%- if mode == 'apikey' %}
         <dt>Label</dt>
         <dd>{{ item.label }}</dd>
+        {%- if mode == 'socmedapikey' %}
         <dt>API Key</dt>
         <dd>{{ item.key }}</dd>
+        {%- elif mode == 'socmedfeed' %}
+        <dt>Target Website Section</dt>
+        <dd>{{ item.cms_section }}</dd>
+        <dt>Processor</dt>
+        <dd>{{ item.processor }}</dd>
+        <dt>API Key</dt>
+        <dd>{{ item.api_key }}</dd>
         {%- elif mode == 'socmedprocessor' %}
-        <dt>Label</dt>
-        <dd>{{ item.label }}</dd>
         <dt>API Endpoint URI</dt>
         <dd>{{ item.uri }}</dd>
         {%- endif %}
     </dl>
     
     <nav class="model-item-actions">
-        {%- if mode == 'apikey' %}
-        <a href="{{ reverse('s13admin:socmedapikeys_update', args=[item.pk, ]) }}">Update</a>
-        <a href="{{ reverse('s13admin:socmedapikeys_delete', args=[item.pk, ]) }}">Delete</a>
-        {%- elif mode == 'socmedprocessor' %}
-        <a href="{{ reverse('s13admin:socmedprocessors_update', args=[item.pk, ]) }}">Update</a>
-        <a href="{{ reverse('s13admin:socmedprocessors_delete', args=[item.pk, ]) }}">Delete</a>
-        {%- endif %}
+        <a href="{{ reverse('s13admin:' + mode + 's_update', args=[item.pk, ]) }}">Update</a>
+        <a href="{{ reverse('s13admin:' + mode + 's_delete', args=[item.pk, ]) }}">Delete</a>
     </nav>
 </div>
     {%- endfor %}

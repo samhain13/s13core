@@ -57,9 +57,14 @@ class SocMedCRUDMixin(S13UserRequiredMixin):
 
 
 class APIKeyList(SocMedListMixin, ListView):
-    mode = 'apikey'
+    description = '''
+    API Keys are used for authentication on other websites like
+    Facebook, Twitter, and YouTube. Those websites, in turn, provide access
+    to your posts so that they can be re-posted on this website.
+    '''
+    mode = 'socmedapikey'
     model = APIKey
-    title = 'API Keys'
+    title = 'Social Media API Keys'
 
 
 class APIKeyCreate(SocMedCRUDMixin, CreateView):
@@ -96,12 +101,58 @@ class APIKeyUpdate(SocMedCRUDMixin, UpdateView):
 
 
 class SocMedFeedList(SocMedListMixin, ListView):
+    description = '''
+    Social Media Feeds represent snapshots of the posts that you have made
+    in a registered Social Media website like Facebook and Twitter. Feeds
+    need an API Key and Feed Processor, which provide access controls to your
+    Social Media and processing instructions for the data response.
+    '''
     mode = 'socmedfeed'
     model = SocMedFeed
     title = 'Social Media Feeds'
 
 
+class SocMedFeedCreate(SocMedCRUDMixin, CreateView):
+    description = 'Create a new Social Media Feed.'
+    form_class = SocMedFeedForm
+    model = SocMedFeed
+    success_message = 'Social Media Feed created.'
+    success_url = reverse_lazy('s13admin:socmedfeeds')
+    title = 'Create Social Media Feed'
+
+
+class SocMedFeedDelete(SocMedCRUDMixin, DeleteView):
+    cancel_url = reverse_lazy('s13admin:socmedfeeds')
+    description = 'Are you sure you want to delete this Feed?'
+    model = SocMedFeed
+    success_message = 'Social Media Feed deleted.'
+    success_url = reverse_lazy('s13admin:socmedfeeds')
+    template_name = 'admin/delete.html'
+    title = 'Delete Social Media Feed'
+
+    def post(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(SocMedFeedDelete, self).post(
+            self.request, *self.args, **self.kwargs)
+
+
+class SocMedFeedUpdate(SocMedCRUDMixin, UpdateView):
+    description = 'Update this Social Media Feed.'
+    form_class = SocMedFeedForm
+    model = SocMedFeed
+    success_message = 'Social Media Feed updated.'
+    success_url = reverse_lazy('s13admin:socmedfeeds')
+    title = 'Update Social Media Feed'
+
+
 class SocMedProcessorList(SocMedListMixin, ListView):
+    description = '''
+    Feed Processors contain processing instructions that are taylored for
+    data responses from registered Social Media websites like Facebook and
+    Twitter. Feed Processor objects include a Python Code field whose contents
+    are <code>eval'ed</code> each time a request for downloading a Social Media
+    feed is made. Use this facility with care.
+    '''
     mode = 'socmedprocessor'
     model = SocMedProcessor
     title = 'Social Media Processors'

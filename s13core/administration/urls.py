@@ -100,6 +100,21 @@ urlpatterns = [
         name='socmedfeeds'
     ),
     url(
+        r'^social-media/create-feed/$',
+        socmed.SocMedFeedCreate.as_view(),
+        name='socmedfeeds_create'
+    ),
+    url(
+        r'^social-media/delete-feed/(?P<pk>[\d]+)/$',
+        socmed.SocMedFeedDelete.as_view(),
+        name='socmedfeeds_delete'
+    ),
+    url(
+        r'^social-media/update-feed/(?P<pk>[\d]+)/$',
+        socmed.SocMedFeedUpdate.as_view(),
+        name='socmedfeeds_update'
+    ),
+    url(
         r'^social-media/processors/$',
         socmed.SocMedProcessorList.as_view(),
         name='socmedprocessors'
