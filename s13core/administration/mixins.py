@@ -24,15 +24,15 @@ class GenericCRUDMixin(S13UserRequiredMixin):
     mixing for Settings CRUD, this may also be used for other models. Just
     override the form_class and model as needed.
     '''
-    template_name = None
+    context_cancel_url = ''
+    context_sidebars = []
     form_class = None
     model = None
-    ui_title = 'CRUD Interface Title'
-    ui_description = 'CRUD interface description.'
     success_message = 'Success message.'
     success_url = reverse_lazy('s13admin:settings')
-    context_sidebars = []
-    context_cancel_url = ''
+    template_name = None
+    ui_title = 'CRUD Interface Title'
+    ui_description = 'CRUD interface description.'
 
     def delete(self, *args, **kwargs):
         try:

@@ -11,6 +11,6 @@
     {%- for field in form %}
     {{ form_macros.form_group(field) }}
     {%- endfor %}
-    {{ form_macros.form_bottom(csrf_token=csrf_token) }}
+    {{ form_macros.form_bottom(csrf_token=csrf_token, submit_text=ui_title, cancel_url=cancel_url if cancel_url else None) }}
 </form>
 {% endblock %}
