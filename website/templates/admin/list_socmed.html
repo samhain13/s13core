@@ -30,6 +30,9 @@
     </dl>
     
     <nav class="model-item-actions">
+        {% if mode == 'socmedfeed' -%}
+        <a href="{{ reverse('s13admin:socmed_retrieve', args=[item.pk, ]) }}" class="highlight">Retrieve Feed Data</a>
+        {% endif -%}
         <a href="{{ reverse('s13admin:' + mode + 's_update', args=[item.pk, ]) }}">Update</a>
         <a href="{{ reverse('s13admin:' + mode + 's_delete', args=[item.pk, ]) }}">Delete</a>
     </nav>

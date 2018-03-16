@@ -1,6 +1,8 @@
+from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView
 from django.views.generic import DeleteView
+from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
 
@@ -156,3 +158,21 @@ class SocMedProcessorUpdate(SocMedCRUDMixin, UpdateView):
     success_url = reverse_lazy('s13admin:socmedprocessors')
     ui_description = 'Update this Social Media Feed Processor.'
     ui_title = 'Update Social Media Feed Processor'
+
+
+class RetrieveSocMedFeed(SocMedListMixin, DetailView):
+    model = SocMedFeed
+
+    def get_context_data(self, **kwargs):
+        context = super(RetrieveSocMedFeed, self).get_context_data(**kwargs)
+        # Get the JSON first.
+        # error = self.object.get_response()
+        # if error:
+        #     messages.error(self.request, str(error))
+        #     return context  # Skip processing.
+        # Process the response.
+        error = self.object.process_response()
+        if error:
+            messages.error(self.request, str(error))
+            return context
+        return context

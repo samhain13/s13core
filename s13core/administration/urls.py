@@ -134,6 +134,11 @@ urlpatterns = [
         socmed.SocMedProcessorUpdate.as_view(),
         name='socmedprocessors_update'
     ),
+    url(
+        r'^social-media/retrieve-feed/(?P<pk>[\d]+)/$',
+        socmed.RetrieveSocMedFeed.as_view(),
+        name='socmed_retrieve'
+    ),
 
     # ------------- Settings views.
     url(

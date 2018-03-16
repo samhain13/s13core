@@ -1,10 +1,13 @@
 import json
+import os
 import urllib.request
 
+from django.conf import settings as s
 from django.core.exceptions import FieldError
 from django.db import models
 
 from s13core.content_management.models import Article
+from s13core.content_management.models import FileAsset
 
 
 class SocMedModel(models.Model):
@@ -100,11 +103,41 @@ class SocMedFeed(SocMedModel):
         '''Makes an HTTP request the a social media website and collects
         the response so that the processor can do something with it.
         '''
-        with urllib.request.urlopen(self.uri) as response:
-            self.response = response.read()
-            self.save()
+        try:
+            with urllib.request.urlopen(self.uri) as response:
+                self.response = response.read()
+                self.save()
+            return None
+        except urllib.error.HTTPError as e:
+            return e
 
     def process_response(self):
-        '''Totally unsafe.'''
+        '''Totally unsafe but what else can we do?'''
 
-        exec(self.processor.code)
+        try:
+            feed = self
+            exec(self.processor.code)
+            return None
+        except Exception as e:
+            return e
+
+    def save_as_fileasset(
+                self, post_id, file_asset_uri, title=None, description=None):
+        '''Saves a resource locally as a FileAsset object (see CMS).'''
+
+        ext = file_asset_uri.split('/')[-1]
+        filename = '{}.{}'.format(post_id, ext)
+        target_path = os.path.join(s.MEDIA_ROOT, filename)
+
+        # If the target filename already exists in the media directory, that
+        # means we have an existing FileAsset for it. So, just return that.
+        if os.path.isfile(target_path):
+            return FileAsset.objects.filter(media_file=target_path).first()
+
+        with urllib.request.urlopen(file_asset_uri) as downloaded:
+            asset = FileAsset()
+            asset.title = title
+            asset.description = description
+            asset.media_file.save(filename, downloaded, save=True)
+            asset.save()
+            return asset
