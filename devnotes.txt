@@ -1,0 +1,15 @@
+This is a temporary file where TODOs might be included.
+
+
+-------------
+
+Sample, incomplete processor for Instagram posts (re socmed_collector):
+
+for post in self.response_json['data'][:1]:
+    post_id = post['id']
+    title = 'Instagram Test Post'
+    description = post['caption']['text']
+    image_url = post['images']['standard_resolution']['url']
+
+    # Save the image as a FileAsset so we can attach it to the Article to be created.
+    file_asset = self.save_as_fileasset(post_id, image_url, title, description)
