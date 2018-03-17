@@ -356,6 +356,8 @@ class FileAsset(models.Model):
         help_text='Value used for alt attributes in images and other elements.'
     )
     description = models.TextField(null=True, blank=True)
+    date_made = models.DateTimeField(auto_now_add=True)
+    date_edit = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-pk']
