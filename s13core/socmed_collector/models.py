@@ -75,10 +75,6 @@ class SocMedFeed(SocMedModel):
         verbose_name='Feed Processor'
     )
     max_results = models.IntegerField(default=5)
-    cms_section = models.ForeignKey(
-        Article,
-        verbose_name='Target Website Section'
-    )
     response = models.TextField(null=True, blank=True)
 
     class Meta:
@@ -112,10 +108,10 @@ class SocMedFeed(SocMedModel):
             return e
 
     def process_response(self):
-        '''Totally unsafe but what else can we do?'''
-
+        '''Executes a user-provided code snippet that should handle the data
+        supplied in the response JSON.
+        '''
         try:
-            feed = self
             exec(self.processor.code)
             return None
         except Exception as e:
@@ -130,14 +126,19 @@ class SocMedFeed(SocMedModel):
         target_path = os.path.join(s.MEDIA_ROOT, filename)
 
         # If the target filename already exists in the media directory, that
-        # means we have an existing FileAsset for it. So, just return that.
+        # means we have an existing FileAsset for it (ideally). Return that.
         if os.path.isfile(target_path):
             return FileAsset.objects.filter(media_file=target_path).first()
 
-        with urllib.request.urlopen(file_asset_uri) as downloaded:
-            asset = FileAsset()
-            asset.title = title
-            asset.description = description
-            asset.media_file.save(filename, downloaded, save=True)
-            asset.save()
+        # If anything goes wrong, just return None so that the parent
+        # process can continue.
+        try:
+            with urllib.request.urlopen(file_asset_uri) as downloaded:
+                asset = FileAsset()
+                asset.title = title
+                asset.description = description
+                asset.media_file.save(filename, downloaded, save=True)
+                asset.save()
             return asset
+        except Exception:
+            return None

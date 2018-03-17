@@ -11,14 +11,7 @@ from .models import SocMedProcessor
 
 
 def basic_setup():
-    '''Helper. Sets up a basic 4 object arrangement for testing.'''
-
-    section = Article(
-        title='Social Media Posts Section',
-        slug='social-media-posts'
-    )
-    if Article.objects.count() == 0:
-        section.save()
+    '''Helper. Sets up a basic 3 object arrangement for testing.'''
 
     api_key = APIKey(
         key='12345',
@@ -40,13 +33,12 @@ def basic_setup():
         api_key=api_key,
         processor=sm_proc,
         account_id='username0987',
-        max_results=0,
-        cms_section=section
+        max_results=0
     )
     if SocMedFeed.objects.count() == 0:
         sm_feed.save()
 
-    return section, api_key, sm_proc, sm_feed
+    return api_key, sm_proc, sm_feed
 
 
 class SocMedCollectorTests(TestCase):
@@ -74,7 +66,7 @@ class SocMedCollectorTests(TestCase):
         self.assertEqual(str(api_key), 'APIKey: {}'.format(label))
 
     def test_socmed_feed_uri(self):
-        section, api_key, sm_proc, sm_feed = basic_setup()
+        api_key, sm_proc, sm_feed = basic_setup()
         self.assertEqual(
             sm_proc.uri.format(
                 api_key=api_key.key, account_id=sm_feed.account_id),
@@ -82,14 +74,14 @@ class SocMedCollectorTests(TestCase):
         )
 
     def test_socmed_feed_get_response(self):
-        section, api_key, sm_proc, sm_feed = basic_setup()
+        api_key, sm_proc, sm_feed = basic_setup()
         # Assuming localhost:8000 is not accepting connections.
         self.assertRaises(URLError, sm_feed.get_response)
         # Not sure how we can test HTTPError locally without opening an HTTP
         # server, so we'll just skip testing for that.
 
     def test_socmed_feed_process_response(self):
-        section, api_key, sm_proc, sm_feed = basic_setup()
+        api_key, sm_proc, sm_feed = basic_setup()
         # Since we cannot test the actual retrieval of a resource from a
         # social media site, we'll just use a JSON that is similar to what
         # Instagram returns.
@@ -104,7 +96,6 @@ class SocMedCollectorTests(TestCase):
             post.body,
             '<p>This tricycle looks like a prop from Thunderdome.</p>'
         )
-        self.assertEqual(section, post.parent)
         # Clean up.
         post.delete()
 
@@ -130,7 +121,6 @@ for d in self.response_json['data']:
         a.body = '<p>{}</p>'.format(d['caption']['text'])
         a.body = a.body.replace('\\n', '\\n<br />')
         a.body = a.body.replace('\\n<br />\\n<br />', '</p>\\n\\n<p>')
-        a.parent = self.cms_section
         a.save()
 
     # We can also download any of the images from Instagram and save it as
