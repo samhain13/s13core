@@ -8,7 +8,34 @@
 {% block main_interface %}
 <h2>{{ ui_title }}</h2>
 <p class="form-description">{{ ui_description|safe }}</p>
-    {% for item in object_list %}
+    {%- if mode == 'retrieved' %}
+    
+<h3>Newly Created FileAssets</h3>
+        {% for item in new_fileassets %}
+<div class="model-item">
+    <dl class="model-item-summary">
+        <dt>Title</dt>
+        <dd>{{ item.title }}</dd>
+        <dt>Description</dt>
+        <dd>{{ item.description }}</dd>
+        <dt>Media File</dt>
+        <dd>{{ item.media_file }}</dd>
+    </dl>
+    
+    <nav class="model-item-actions">
+        <a href="{{ item.media_file.url }}" class="highlight" target="_blank">View</a>
+        <a href="{{ reverse('s13admin:update_fileasset', args=[item.pk]) }}" target="_blank">Update</a>
+        <a href="{{ reverse('s13admin:delete_fileasset', args=[item.pk]) }}" class="lowlight" target="_blank">Delete</a>
+    </nav>
+</div>
+        {%- endfor %}
+
+<hr />
+
+<h3>Newly Created Articles</h3>
+
+    {%- else %}
+        {% for item in object_list %}
 <div class="model-item">
     <dl class="model-item-summary">
         <dt>Label</dt>
@@ -17,8 +44,6 @@
         <dt>API Key</dt>
         <dd>{{ item.key }}</dd>
         {%- elif mode == 'socmedfeed' %}
-        <dt>Target Website Section</dt>
-        <dd>{{ item.cms_section }}</dd>
         <dt>Processor</dt>
         <dd>{{ item.processor }}</dd>
         <dt>API Key</dt>
@@ -30,12 +55,14 @@
     </dl>
     
     <nav class="model-item-actions">
-        {% if mode == 'socmedfeed' -%}
+        <h3>Navigation</h3>
+            {% if mode == 'socmedfeed' -%}
         <a href="{{ reverse('s13admin:socmed_retrieve', args=[item.pk, ]) }}" class="highlight">Retrieve Feed Data</a>
-        {% endif -%}
+            {% endif -%}
         <a href="{{ reverse('s13admin:' + mode + 's_update', args=[item.pk, ]) }}">Update</a>
-        <a href="{{ reverse('s13admin:' + mode + 's_delete', args=[item.pk, ]) }}">Delete</a>
+        <a href="{{ reverse('s13admin:' + mode + 's_delete', args=[item.pk, ]) }}" class="lowlight">Delete</a>
     </nav>
 </div>
-    {%- endfor %}
+        {%- endfor %}
+    {%- endif %}
 {% endblock %}

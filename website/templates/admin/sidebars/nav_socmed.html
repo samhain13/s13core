@@ -1,10 +1,11 @@
 
 <h2>Social Media Collector Navigation</h2>
-{% if mode -%}
+{% if mode != 'retrieved' %}
+    {% if mode -%}
 <nav>
     <a href="{{ reverse('s13admin:' + mode + 's_create') }}" class="highlight">Create New {{ ui_title[:-1] }}</a>
 </nav>
-
+    {% endif -%}
 {% endif -%}
 <nav>
     <a href="{{ reverse('s13admin:socmedapikeys') }}">API Keys</a>

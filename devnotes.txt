@@ -1,15 +1,28 @@
-This is a temporary file where TODOs might be included.
+This is a temporary file where TODOs and sample code are included.
 
 
 -------------
 
-Sample, incomplete processor for Instagram posts (re socmed_collector):
+Sample processor for Instagram posts (re socmed_collector):
 
-for post in self.response_json['data'][:1]:
+from time import sleep
+from s13core.content_management.models import Article
+
+target_article = Article.objects.get(pk=1)
+
+for post in reversed(self.response_json['data']):
     post_id = post['id']
     title = 'Instagram Test Post'
     description = post['caption']['text']
+    keywords = ', '.join(['instagram'] + post['tags'])
     image_url = post['images']['standard_resolution']['url']
 
-    # Save the image as a FileAsset so we can attach it to the Article to be created.
-    file_asset = self.save_as_fileasset(post_id, image_url, title, description)
+    # Save the image as a FileAsset so we can attach it to an the Article.
+    file_asset = self.save_as_fileasset(
+        post_id, image_url, title, description, keywords)
+
+    if file_asset:
+        target_article.media.add(file_asset)
+
+    # Because we're nice.
+    sleep(5)

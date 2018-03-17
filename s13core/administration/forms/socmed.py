@@ -14,7 +14,7 @@ class APIKeyForm(forms.ModelForm):
 class SocMedFeedForm(forms.ModelForm):
     class Meta:
         model = SocMedFeed
-        fields = ['label', 'account_id', 'api_key', 'processor']
+        fields = ['label', 'account_id', 'api_key', 'processor', 'max_results']
 
 
 class SocMedProcessorForm(forms.ModelForm):

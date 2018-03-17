@@ -5,7 +5,10 @@ from django.views.generic import DeleteView
 from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
+from django.utils import timezone
 
+from s13core.content_management.models import Article
+from s13core.content_management.models import FileAsset
 from s13core.socmed_collector.models import APIKey
 from s13core.socmed_collector.models import SocMedFeed
 from s13core.socmed_collector.models import SocMedProcessor
@@ -161,18 +164,39 @@ class SocMedProcessorUpdate(SocMedCRUDMixin, UpdateView):
 
 
 class RetrieveSocMedFeed(SocMedListMixin, DetailView):
+    mode = 'retrieved'
     model = SocMedFeed
+    ui_description = 'No data was retrieved from the Social Media account.'
+    ui_title = 'Retrieved Feed Data'
 
     def get_context_data(self, **kwargs):
         context = super(RetrieveSocMedFeed, self).get_context_data(**kwargs)
+        context['new_fileassets'] = []
+        context['new_articles'] = []
+
+        calltime = timezone.now()
+
         # Get the JSON first.
-        # error = self.object.get_response()
-        # if error:
-        #     messages.error(self.request, str(error))
-        #     return context  # Skip processing.
+        error = self.object.get_response()
+        if error:
+            messages.error(self.request, str(error))
+            return context  # Skip processing.
+
         # Process the response.
         error = self.object.process_response()
         if error:
             messages.error(self.request, str(error))
             return context
+
+        # Let the user know what new FileAssets and Article were created.
+        for fa in FileAsset.objects.filter(date_made__gt=calltime):
+            context['new_fileassets'].append(fa)
+        for a in Article.objects.filter(date_made__gt=calltime):
+            context['new_articles'].append(fa)
+
+        if context['new_fileassets'] or context['new_articles']:
+            context['ui_description'] = \
+                'Data retrieved from the Social Media account.'
+
+        # Finally!
         return context

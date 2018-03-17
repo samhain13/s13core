@@ -6,7 +6,6 @@ from django.conf import settings as s
 from django.core.exceptions import FieldError
 from django.db import models
 
-from s13core.content_management.models import Article
 from s13core.content_management.models import FileAsset
 
 
@@ -101,7 +100,7 @@ class SocMedFeed(SocMedModel):
         '''
         try:
             with urllib.request.urlopen(self.uri) as response:
-                self.response = response.read()
+                self.response = response.read().decode('utf-8')
                 self.save()
             return None
         except urllib.error.HTTPError as e:
@@ -118,10 +117,11 @@ class SocMedFeed(SocMedModel):
             return e
 
     def save_as_fileasset(
-                self, post_id, file_asset_uri, title=None, description=None):
+                self, post_id, file_asset_uri, title=None,
+                description=None, keywords=None):
         '''Saves a resource locally as a FileAsset object (see CMS).'''
 
-        ext = file_asset_uri.split('/')[-1]
+        ext = file_asset_uri.split('/')[-1].split('.')[-1]
         filename = '{}.{}'.format(post_id, ext)
         target_path = os.path.join(s.MEDIA_ROOT, filename)
 
@@ -137,6 +137,7 @@ class SocMedFeed(SocMedModel):
                 asset = FileAsset()
                 asset.title = title
                 asset.description = description
+                asset.keywords = keywords
                 asset.media_file.save(filename, downloaded, save=True)
                 asset.save()
             return asset

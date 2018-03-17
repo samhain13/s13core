@@ -6,7 +6,7 @@ from s13core.content_management.models import FileAsset
 class FileAssetForm(forms.ModelForm):
     class Meta:
         model = FileAsset
-        exclude = ['extension']
+        exclude = ['date_edit', 'date_made', 'extension']
 
     def __init__(self, *args, **kwargs):
         super(FileAssetForm, self).__init__(*args, **kwargs)
