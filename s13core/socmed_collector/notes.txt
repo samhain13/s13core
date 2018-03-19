@@ -1,9 +1,4 @@
-This is a temporary file where TODOs and sample code are included.
-
-
--------------
-
-Sample processor for Instagram posts (re socmed_collector):
+Sample processor for Instagram posts:
 
 from time import sleep
 from s13core.content_management.models import Article
@@ -26,3 +21,8 @@ for post in reversed(self.response_json['data']):
 
     # Because we're nice.
     sleep(5)
+
+
+-------------
+
+
