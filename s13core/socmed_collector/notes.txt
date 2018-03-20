@@ -33,13 +33,13 @@ for post in reversed(self.response_json['data']):
 -------------
 
 
-YouTube Playlist items:
+YouTube Videos:
 
-# URI (must know the Playlist ID before hand):
-# https://www.googleapis.com/youtube/v3/playlistItems
-# ?part=snippet&playlistId=<playlist_id>&api_key={api_key}
-#
-# maybe save <playlist_id> in account_id field
+# URI (must know the Channel ID before hand):
+# https://www.googleapis.com/youtube/v3/search?
+# part=snippet&maxResults={max_results}&
+# order=date&channelId={account_id}&key={api_key}
+
 
 from time import sleep
 from s13core.content_management.models import Article
@@ -47,17 +47,13 @@ from s13core.content_management.models import Article
 target_article = Article.objects.get_section('SectionSlug')
 
 for post in reversed(self.response_json['items']):
-    post_id = post["snippet"]["resourceId"]["videoId"]
+    post_id = post["id"]["videoId"]
 
     # post_id can also be used for:
     # https://www.youtube.com/watch?v=<post_id>
 
     title = post['snippet']['title']
     description = post['snippet']['description']
-    if 'tags' in post['snippet']:
-        keywords = post['snippet']['tags']
-    else:
-        keywords = None
     image_url = post['snippet']['thumbnails']['high']['url']
 
     # Save the image as a FileAsset so we can attach it to an the Article.
