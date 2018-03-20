@@ -21,7 +21,7 @@ class S13UserRequiredMixin(LoginRequiredMixin):
 
 class GenericCRUDMixin(S13UserRequiredMixin):
     '''Provides handling for generic CRUD operations. Originally written as a
-    mixing for Settings CRUD, this may also be used for other models. Just
+    mixin for Settings CRUD, this may also be used for other models. Just
     override the form_class and model as needed.
     '''
     context_cancel_url = ''

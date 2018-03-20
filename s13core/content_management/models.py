@@ -258,6 +258,14 @@ class Article(models.Model):
             filters['is_public'] = True
         return Article.objects.filter(**filters).order_by(self.sort_children)
 
+    def get_media(self):
+        '''Returns a list of FileAssets associated with the Article.'''
+        media = self.media.all().order_by(self.sort_article_media)
+        if self.limit_media > 0:
+            return media[:self.limit_media]
+        else:
+            return media
+
     def get_keyword_list(self):
         '''Returns a list of comma-separated keywords.'''
 
