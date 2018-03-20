@@ -147,16 +147,26 @@ class Article(models.Model):
         related_name='article_media',
         help_text='Associate file assets like photos to this article.'
     )
+    limit_media = models.IntegerField(
+        default=0,
+        blank=True,
+        verbose_name='Article Media Limit',
+        help_text='Limit the number of associated media to display;<br />' +
+                  'a value of zero will show all associated media.'
+    )
     sort_article_media = models.CharField(
         choices=[
+            ('pk', 'Date Made (Oldest First)'),
+            ('-pk', 'Date Made (Newest First)'),
             ('title', 'Title Ascending'),
             ('-title', 'Title Descending'),
-            ('alt_text', 'Alt Text Ascending'),
-            ('-alt_text', 'Alt Text Descending'),
+            ('date_edit', 'Edit Date (Freshest First)'),
+            ('-date_edit', 'Edit Date (Freshest Last)'),
         ],
         max_length=128,
         default='title',
         blank=True,
+        verbose_name='Sort Article Media',
         help_text='Sorting strategy for media associated with this article.'
     )
 
@@ -180,10 +190,12 @@ class Article(models.Model):
     )
     is_public = models.BooleanField(
         default=True,
+        verbose_name='Is Public',
         help_text='Make this article available to your viewers.'
     )
     is_homepage = models.BooleanField(
         default=False,
+        verbose_name='Is Homepage',
         help_text='Make this article the website\'s homepage.'
     )
     sort_children = models.CharField(
@@ -200,12 +212,14 @@ class Article(models.Model):
         ],
         blank=True,
         default='-pk',
+        verbose_name='Sort Children',
         help_text='Sorting strategy for child articles when generating<br />' +
                   'navigation links and other user interfaces.'
     )
     include_children = models.IntegerField(
         default=0,
         blank=True,
+        verbose_name='Include Children',
         help_text='Number of child articles to include in a page;<br />' +
                   'i.e., a Paginator instance.'
     )
