@@ -37,7 +37,7 @@ YouTube Videos:
 
 # URI (must know the Channel ID before hand):
 # https://www.googleapis.com/youtube/v3/search?
-# part=snippet&maxResults={max_results}&
+# part=snippet&maxResults={items}&
 # order=date&channelId={account_id}&key={api_key}
 
 
@@ -58,7 +58,7 @@ for post in reversed(self.response_json['items']):
 
     # Save the image as a FileAsset so we can attach it to an the Article.
     file_asset = self.save_as_fileasset(
-        post_id, image_url, title, description, keywords)
+        post_id, image_url, title, description)
 
     if file_asset:
         target_article.media.add(file_asset)
