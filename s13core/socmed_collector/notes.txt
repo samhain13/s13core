@@ -13,9 +13,12 @@ from s13core.content_management.models import Article
 target_article = Article.objects.get_section('SectionSlug')
 
 for post in reversed(self.response_json['data']):
-    post_id = post['id']
-    title = 'Instagram Test Post'
-    description = post['caption']['text']
+    post_id = post['link'].split('/p/')[-1][:-1]
+    title = 'Instagram: {}'.format(post_id)
+    description = ' '.join([
+        x for x in post['caption']['text'].replace('\n', ' ').split(' ')
+        if not x.startswith('#')
+    ])
     keywords = ', '.join(['instagram'] + post['tags'])
     image_url = post['images']['standard_resolution']['url']
 
