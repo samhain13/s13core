@@ -388,11 +388,12 @@ class FileAsset(models.Model):
     def delete(self):
         '''When a FileAsset is deleted, delete the associated file as well.'''
 
-        for fa in FileAsset.objects.all():
-            if fa.path_on_disk == self.path_on_disk:
-                break
-        else:
-            os.remove(self.path_on_disk)
+        path = self.path_on_disk
+        print(path)
+        if path:
+            if os.path.isfile(path):
+                os.remove(path)
+        print(os.path.isfile(path))
         super(FileAsset, self).delete()
 
     @property
