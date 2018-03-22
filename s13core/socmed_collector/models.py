@@ -36,8 +36,8 @@ class APIKey(SocMedModel):
     '''Represents an API key to be used when requesting resources from
     a Social Media website.
     '''
-    key = models.CharField(max_length=128, unique=True)
     label = models.CharField(max_length=64, unique=True)
+    key = models.CharField(max_length=128, unique=True)
 
     class Meta:
         verbose_name = 'API Key'
