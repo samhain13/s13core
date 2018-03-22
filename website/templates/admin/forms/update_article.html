@@ -29,7 +29,7 @@
     
     <fieldset id="fields-display-options">
         <legend>Display Options</legend>
-    {%- for field in form.get_fields(['template', 'include_children', 'sort_children', 'sort_article_media', 'weight', 'is_public', 'is_homepage']) %}
+    {%- for field in form.get_fields(['template', 'include_children', 'sort_children', 'limit_media', 'sort_article_media', 'weight', 'is_public', 'is_homepage']) %}
     {{ form_macros.form_group(field) }}
     {%- endfor %}
     </fieldset>

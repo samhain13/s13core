@@ -12,11 +12,7 @@ class ArticleForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super(ArticleForm, self).__init__(*args, **kwargs)
-        self.fields['media'].required = False
+        exclude = ['media', 'sidelinks']  # Leave the M2M fields alone.
 
     def get_fields(self, field_names):
         return [self[x] for x in field_names]

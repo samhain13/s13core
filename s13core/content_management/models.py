@@ -147,16 +147,26 @@ class Article(models.Model):
         related_name='article_media',
         help_text='Associate file assets like photos to this article.'
     )
+    limit_media = models.IntegerField(
+        default=0,
+        blank=True,
+        verbose_name='Article Media Limit',
+        help_text='Limit the number of associated media to display;<br />' +
+                  'a value of zero will show all associated media.'
+    )
     sort_article_media = models.CharField(
         choices=[
+            ('pk', 'Date Made (Oldest First)'),
+            ('-pk', 'Date Made (Newest First)'),
             ('title', 'Title Ascending'),
             ('-title', 'Title Descending'),
-            ('alt_text', 'Alt Text Ascending'),
-            ('-alt_text', 'Alt Text Descending'),
+            ('date_edit', 'Edit Date (Freshest First)'),
+            ('-date_edit', 'Edit Date (Freshest Last)'),
         ],
         max_length=128,
         default='title',
         blank=True,
+        verbose_name='Sort Article Media',
         help_text='Sorting strategy for media associated with this article.'
     )
 
@@ -180,10 +190,12 @@ class Article(models.Model):
     )
     is_public = models.BooleanField(
         default=True,
+        verbose_name='Is Public',
         help_text='Make this article available to your viewers.'
     )
     is_homepage = models.BooleanField(
         default=False,
+        verbose_name='Is Homepage',
         help_text='Make this article the website\'s homepage.'
     )
     sort_children = models.CharField(
@@ -200,12 +212,14 @@ class Article(models.Model):
         ],
         blank=True,
         default='-pk',
+        verbose_name='Sort Children',
         help_text='Sorting strategy for child articles when generating<br />' +
                   'navigation links and other user interfaces.'
     )
     include_children = models.IntegerField(
         default=0,
         blank=True,
+        verbose_name='Include Children',
         help_text='Number of child articles to include in a page;<br />' +
                   'i.e., a Paginator instance.'
     )
@@ -243,6 +257,14 @@ class Article(models.Model):
         if exclude_private:
             filters['is_public'] = True
         return Article.objects.filter(**filters).order_by(self.sort_children)
+
+    def get_media(self):
+        '''Returns a list of FileAssets associated with the Article.'''
+        media = self.media.all().order_by(self.sort_article_media)
+        if self.limit_media > 0:
+            return media[:self.limit_media]
+        else:
+            return media
 
     def get_keyword_list(self):
         '''Returns a list of comma-separated keywords.'''
@@ -366,11 +388,12 @@ class FileAsset(models.Model):
     def delete(self):
         '''When a FileAsset is deleted, delete the associated file as well.'''
 
-        for fa in FileAsset.objects.all():
-            if fa.path_on_disk == self.path_on_disk:
-                break
-        else:
-            os.remove(self.path_on_disk)
+        path = self.path_on_disk
+        print(path)
+        if path:
+            if os.path.isfile(path):
+                os.remove(path)
+        print(os.path.isfile(path))
         super(FileAsset, self).delete()
 
     @property

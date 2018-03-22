@@ -137,7 +137,7 @@ class ArticleDetail(ArticlesList):
 
 
 class ArticleAssociate(S13UserRequiredMixin, RedirectView):
-    '''Does the actual associations and deassociations of parent-children
+    '''Does the actual associations and dissociations of parent-children
     and article-sidelinks.
     '''
     def get_redirect_url(self, *args, **kwargs):
@@ -145,6 +145,7 @@ class ArticleAssociate(S13UserRequiredMixin, RedirectView):
         is_add = self.kwargs['action'] == 'add'
         mode = self.kwargs['mode']
         args = [self.kwargs['pk'], mode]
+
         try:
             base_article = Article.objects.get(pk=self.kwargs['pk'])
             if mode in ['image', 'media']:
@@ -154,6 +155,7 @@ class ArticleAssociate(S13UserRequiredMixin, RedirectView):
         except ObjectDoesNotExist:
             messages.error(self.request, 'Article does not exist.')
             return reverse_lazy('s13admin:articles')
+
         if mode == 'children':
             if is_add:
                 selected_article.parent = base_article
@@ -186,6 +188,7 @@ class ArticleAssociate(S13UserRequiredMixin, RedirectView):
             else:
                 base_article.sidelinks.remove(selected_article)
                 message = 'Article removed from sidelinks.'
+
         messages.success(self.request, message)
         return reverse_lazy('s13admin:detail_article', args=args)
 
