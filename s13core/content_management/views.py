@@ -157,6 +157,10 @@ class SectionView(S13CMSMixin, TemplateView):
         # The Section requested is invalid.
         if not self.article:
             return self.not_found({'s': self.settings})
+        # Don't show private sections.
+        if not self.article.is_public and not \
+                self.request.user.is_authenticated():
+            return self.not_found({'s': self.settings})
         # The Section requested is valid.
         self.articles = self.paginate_children()
         self.tweak_settings(self.__class__.__name__)
@@ -212,6 +216,10 @@ class ArticleView(S13CMSMixin, TemplateView):
         # The requested Article is invalid.
         if not self.article:
             return self.not_found({'s': self.settings})
+        # Don't show private articles or public articles in private sections.
+        if not self.request.user.is_authenticated():
+            if not self.article.is_public or not self.section.is_public:
+                return self.not_found({'s': self.settings})
         # The requested Article is valid.
         self.articles = self.paginate_children()
         self.tweak_settings(self.__class__.__name__)
