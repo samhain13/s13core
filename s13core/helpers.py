@@ -76,7 +76,9 @@ def make_external_link(href, link_html, item_classes=None, item_id=None):
     return a.format(href, item_classes, item_id, link_html)
 
 
-def make_nav_items(articles, current_url='/', classes='', use_slugs=False):
+def make_nav_items(
+            articles, current_url='/', classes='', use_slugs=False,
+            include_private=False):
     '''Returns a list of navigation items as HTML anchors.
 
     Arguments:
@@ -89,19 +91,20 @@ def make_nav_items(articles, current_url='/', classes='', use_slugs=False):
     '''
     items = []
     for item in articles:
-        item_url = item.make_url()
-        css_classes = ' class="{}{}{}"'.format(
-            'active' if item_url == current_url else '',
-            ' ' if item_url == current_url and classes else '',
-            classes
-        )
-        if css_classes == ' class=""':
-            css_classes = ''
-        link_text = item.slug if use_slugs else item.title
-        if item.is_homepage:
-            link_text = 'Home'
-        items.append('<a href="{}"{}><span>{}</span></a>'.format(
-            item_url, css_classes, link_text))
+        if item.is_public or (item.is_public == False and include_private):
+            item_url = item.make_url()
+            css_classes = ' class="{}{}{}"'.format(
+                'active' if item_url == current_url else '',
+                ' ' if item_url == current_url and classes else '',
+                classes
+            )
+            if css_classes == ' class=""':
+                css_classes = ''
+            link_text = item.slug if use_slugs else item.title
+            if item.is_homepage:
+                link_text = 'Home'
+            items.append('<a href="{}"{}><span>{}</span></a>'.format(
+                item_url, css_classes, link_text))
     return items
 
 
