@@ -22,6 +22,17 @@
                 {% block article_title %}{{ article.title|safe }}{% endblock %}
             </h1>
             
+            {%- set messages=get_messages(request) %}
+            {%- if messages %}
+            <div id="system-messages">
+                <ul>
+                    {%- for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}><span>{{ message }}</span></li>
+                    {%- endfor %}
+                </ul>
+            </div>
+            {% endif -%}
+            
             <div id="site-tools">
                 <div id="intro-search">
                     <form action="#" method="get">
