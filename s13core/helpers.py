@@ -133,7 +133,7 @@ def make_paginator_nav(
     if page.has_previous():
         prev_link = base_url
         if page.previous_page_number() > 1:
-            prev_link += '?p='.format(page.previous_page_number())
+            prev_link += '?p={}'.format(page.previous_page_number())
             if extra_args:
                 prev_link += extra_args
         else:
