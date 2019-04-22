@@ -1,4 +1,4 @@
-django==1.11.19
+django==1.11.20
 jinja2==2.8.1
 flake8==3.3.0
 markdown==2.6.8
