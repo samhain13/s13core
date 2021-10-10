@@ -16,8 +16,7 @@ class S13MessagingMixin(S13CMSMixin):
         self.articles = []
         self.article = []
         self.settings = Setting.objects.get(is_active=True)
-        return super(S13MessagingMixin, self).dispatch(
-            self.request, *self.args, **self.kwargs)
+        return super().dispatch(self.request, *self.args, **self.kwargs)
 
 
 class SiteMessageCreate(S13MessagingMixin, CreateView):
@@ -26,9 +25,9 @@ class SiteMessageCreate(S13MessagingMixin, CreateView):
     template_name = 'defaults/site-message.html'
 
     def form_valid(self, form):
-        return super(SiteMessageCreate, self).form_valid(form)
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         for key, message in form.errors.items():
             messages.error(self.request, '{}: {}'.format(message[0], key))
-        return super(SiteMessageCreate, self).form_invalid(form)
+        return super().form_invalid(form)

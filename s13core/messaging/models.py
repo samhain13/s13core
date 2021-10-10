@@ -41,4 +41,4 @@ class SiteMessage(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        return super(SiteMessage, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)

@@ -25,7 +25,7 @@ class SettingAdmin(admin.ModelAdmin):
     def get_actions(self, request):
         '''Disables delete_selected because it overrides our delete method.'''
 
-        actions = super(SettingAdmin, self).get_actions(request)
+        actions = super().get_actions(request)
         del actions['delete_selected']
         return actions
 

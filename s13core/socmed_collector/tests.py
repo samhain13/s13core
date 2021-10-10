@@ -1,5 +1,6 @@
 from urllib.error import URLError
 
+from django.contrib.auth.models import User
 from django.core.exceptions import FieldError
 from django.test import TestCase
 
@@ -17,6 +18,7 @@ def basic_setup():
         key='12345',
         label='Social Media Key'
     )
+
     if APIKey.objects.count() == 0:
         api_key.save()
 
@@ -26,6 +28,7 @@ def basic_setup():
         code='print(\'Hello, world.\')',
         notes='Just a test processor.'
     )
+
     if SocMedProcessor.objects.count() == 0:
         sm_proc.save()
 
@@ -35,6 +38,7 @@ def basic_setup():
         account_id='username0987',
         max_results=0
     )
+
     if SocMedFeed.objects.count() == 0:
         sm_feed.save()
 
@@ -42,6 +46,10 @@ def basic_setup():
 
 
 class SocMedCollectorTests(TestCase):
+    def setUp(self):
+        if User.objects.count() < 1:
+            user = User.objects.create_user(
+                'admin', 'admin@example.com', 'admin-password!')
 
     def test_apikey_label_unique(self):
         label = 'Social Media Key'
@@ -103,6 +111,7 @@ class SocMedCollectorTests(TestCase):
 # Here be long strings:
 INSTAGRAM_SAMPLE_PROCESSOR = '''
 from datetime import datetime
+from s13core.content_management.models import Article
 
 for d in self.response_json['data']:
     slug = 'instagram-{}'.format(d['id'].replace('_', '-'))

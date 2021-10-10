@@ -100,14 +100,20 @@ class Setting(models.Model):
         'CopyrightInfo',
         null=True,
         blank=True,
-        verbose_name='Copyright Infomration'
+        verbose_name='Copyright Infomration',
+        on_delete=models.SET_NULL
     )
     contact = models.ManyToManyField(
         'ContactInfo',
         blank=True,
         verbose_name='Contact Information'
     )
-    disclaimer = models.ForeignKey('Disclaimer', null=True, blank=True)
+    disclaimer = models.ForeignKey(
+        'Disclaimer',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
 
     def __str__(self):
         return '{}{}'.format(self.name, ' (active)' if self.is_active else '')
@@ -115,7 +121,7 @@ class Setting(models.Model):
     def delete(self, *args, **kwargs):
         # Always leave one active setting so the website doesn't break.
         if Setting.objects.count() > 1:
-            super(Setting, self).delete(*args, **kwargs)
+            super().delete(*args, **kwargs)
             other_settings = Setting.objects.filter(is_active=True)
             if not other_settings:
                 s = Setting.objects.all()[0]
@@ -134,7 +140,7 @@ class Setting(models.Model):
         else:
             if Setting.objects.filter(is_active=True).count() < 1:
                 self.is_active = True
-        super(Setting, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['-is_active', 'title']

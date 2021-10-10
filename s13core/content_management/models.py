@@ -102,7 +102,11 @@ class Article(models.Model):
         blank=True,
         help_text='Leave blank to allow the system to auto-generate.'
     )
-    owner = models.ForeignKey(User, default=1)
+    owner = models.ForeignKey(
+        User,
+        default=1,
+        on_delete=models.SET_DEFAULT
+    )
     title = models.CharField(
         max_length=255,
         null=True,
@@ -128,13 +132,15 @@ class Article(models.Model):
         null=True,
         blank=True,
         help_text='Associate an image with this article.',
-        related_name='article_image'
+        related_name='article_image',
+        on_delete=models.SET_NULL
     )
     parent = models.ForeignKey(
         'Article',
         null=True,
         blank=True,
-        help_text='Assiciate this article as a child of another article.'
+        help_text='Assiciate this article as a child of another article.',
+        on_delete=models.SET_NULL
     )
     sidelinks = models.ManyToManyField(
         'Article',
@@ -348,7 +354,7 @@ class Article(models.Model):
             for a in Article.objects.filter(is_homepage=True):
                 a.is_homepage = False
                 a.save()
-        super(Article, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class OverwriteStorage(FileSystemStorage):
@@ -393,7 +399,7 @@ class FileAsset(models.Model):
         if path:
             if os.path.isfile(path):
                 os.remove(path)
-        super(FileAsset, self).delete()
+        super().delete()
 
     @property
     def on_disk(self):
@@ -432,4 +438,4 @@ class FileAsset(models.Model):
     def save(self, *args, **kwargs):
         if self.media_file:
             self.extension = self.media_file.path.lower().split('.')[-1]
-        return super(FileAsset, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)

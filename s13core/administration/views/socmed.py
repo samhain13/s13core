@@ -1,11 +1,11 @@
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import CreateView
 from django.views.generic import DeleteView
 from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
-from django.utils import timezone
 
 from s13core.content_management.models import Article
 from s13core.content_management.models import FileAsset
