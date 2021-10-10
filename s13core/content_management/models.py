@@ -354,7 +354,7 @@ class Article(models.Model):
             for a in Article.objects.filter(is_homepage=True):
                 a.is_homepage = False
                 a.save()
-        super(Article, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class OverwriteStorage(FileSystemStorage):
@@ -399,7 +399,7 @@ class FileAsset(models.Model):
         if path:
             if os.path.isfile(path):
                 os.remove(path)
-        super(FileAsset, self).delete()
+        super().delete()
 
     @property
     def on_disk(self):
@@ -438,4 +438,4 @@ class FileAsset(models.Model):
     def save(self, *args, **kwargs):
         if self.media_file:
             self.extension = self.media_file.path.lower().split('.')[-1]
-        return super(FileAsset, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)

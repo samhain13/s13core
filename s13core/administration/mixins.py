@@ -13,7 +13,7 @@ class S13UserRequiredMixin(LoginRequiredMixin):
     redirect_field_name = None
 
     def get_context_data(self, **kwargs):
-        context = super(S13UserRequiredMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['ui_title'] = self.ui_title
         context['ui_description'] = self.ui_description
         return context
@@ -36,7 +36,7 @@ class GenericCRUDMixin(S13UserRequiredMixin):
 
     def delete(self, *args, **kwargs):
         try:
-            response = super(GenericCRUDMixin, self).delete(*args, **kwargs)
+            response = super().delete(*args, **kwargs)
         except Exception as e:
             # Remove any success messages that may have been written.
             storage = messages.get_messages(self.request)
@@ -49,10 +49,10 @@ class GenericCRUDMixin(S13UserRequiredMixin):
     def form_invalid(self, form):
         for key, message in form.errors.items():
             messages.error(self.request, '{}: {}'.format(message[0], key))
-        return super(GenericCRUDMixin, self).form_invalid(form)
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
-        context = super(GenericCRUDMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         for k in [x for x in dir(self) if x.startswith('context_')]:
             key = k.replace('context_', '')
             context[key] = getattr(self, k)

@@ -9,9 +9,9 @@ from s13core.settings.models import Setting
 from .models import Article
 
 
-class S13CMSMixin(object):
+class S13CMSMixin:
     def get_context_data(self, **kwargs):
-        context = super(S13CMSMixin, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['sections'] = self.sections
         context['articles'] = self.articles
         context['article'] = self.article
@@ -119,6 +119,7 @@ class HomepageView(S13CMSMixin, TemplateView):
             # If the site is set to display paginated contents when there
             # is no designated homepage, pull the contents from the database.
             if self.settings.nohome_content_type == 'articles':
+                # TODO: Fix this!
                 self.articles = self.get_paginator(
                     request,
                     Article.objects.exclude(parent=None).order_by('-pk'),
@@ -129,16 +130,15 @@ class HomepageView(S13CMSMixin, TemplateView):
             else:
                 self.articles = []
             self.template_name = 'defaults/no-homepage.html'
-            return super(HomepageView, self).get(request, *args, **kwargs)
+            return super().get(request, *args, **kwargs)
         # A homepage was designated:
         self.articles = self.paginate_children()
         self.tweak_settings(self.__class__.__name__)
         self.template_name = self.get_template()
-        return super(HomepageView, self).get(
-            self.request, *self.args, **self.kwargs)
+        return super().get(self.request, *self.args, **self.kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(HomepageView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['latest_articles'] = Article.objects.filter(is_public=True)\
             .exclude(parent=None).exclude(parent=self.article)\
             .order_by('-date_made')[:32]
@@ -165,8 +165,7 @@ class SectionView(S13CMSMixin, TemplateView):
         self.articles = self.paginate_children()
         self.tweak_settings(self.__class__.__name__)
         self.template_name = self.get_template()
-        return super(SectionView, self).get(
-            self.request, *self.args, **self.kwargs)
+        return super().get(self.request, *self.args, **self.kwargs)
 
 
 class KeywordSearchView(S13CMSMixin, TemplateView):
@@ -193,11 +192,10 @@ class KeywordSearchView(S13CMSMixin, TemplateView):
             selection, self.settings.keywords_search_items)
         self.tweak_settings(self.__class__.__name__)
         self.template_name = self.get_template()
-        return super(KeywordSearchView, self).get(
-            self.request, *self.args, **self.kwargs)
+        return super().get(self.request, *self.args, **self.kwargs)
 
     def get_context_data(self, **kwargs):
-        context = super(KeywordSearchView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['terms'] = self.request.GET.get('q', '')
         return context
 
@@ -224,12 +222,11 @@ class ArticleView(S13CMSMixin, TemplateView):
         self.articles = self.paginate_children()
         self.tweak_settings(self.__class__.__name__)
         self.template_name = self.get_template()
-        return super(ArticleView, self).get(
-            self.request, *self.args, **self.kwargs)
+        return super().get(self.request, *self.args, **self.kwargs)
 
     def get_context_data(self, **kwargs):
         # The Article's section needs to be passed into the context.
-        context = super(ArticleView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['section'] = self.section
         context['previous_article'], context['next_article'] = \
             self.article.get_previous_and_next()
@@ -249,5 +246,4 @@ class UITestView(TemplateView):
             if not h.os.path.isfile(page):
                 raise Http404('Test page does not exist.')
             self.template_name = 'testers/{}'.format(kwargs['page'])
-        return super(UITestView, self).get(
-            self.request, *self.args, **self.kwargs)
+        return super().get(self.request, *self.args, **self.kwargs)

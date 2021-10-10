@@ -29,7 +29,7 @@ class SocMedModel(models.Model):
                     label__iexact=self.label).exclude(pk=self.pk):
                 raise FieldError(
                     'label "{}" is not unique'.format(self.label))
-        return super(SocMedModel, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
 
 class APIKey(SocMedModel):

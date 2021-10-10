@@ -121,7 +121,7 @@ class Setting(models.Model):
     def delete(self, *args, **kwargs):
         # Always leave one active setting so the website doesn't break.
         if Setting.objects.count() > 1:
-            super(Setting, self).delete(*args, **kwargs)
+            super().delete(*args, **kwargs)
             other_settings = Setting.objects.filter(is_active=True)
             if not other_settings:
                 s = Setting.objects.all()[0]
@@ -140,7 +140,7 @@ class Setting(models.Model):
         else:
             if Setting.objects.filter(is_active=True).count() < 1:
                 self.is_active = True
-        super(Setting, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['-is_active', 'title']
