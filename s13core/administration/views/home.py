@@ -3,9 +3,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
-from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
+from django.urls import reverse
+from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView

@@ -100,14 +100,20 @@ class Setting(models.Model):
         'CopyrightInfo',
         null=True,
         blank=True,
-        verbose_name='Copyright Infomration'
+        verbose_name='Copyright Infomration',
+        on_delete=models.SET_NULL
     )
     contact = models.ManyToManyField(
         'ContactInfo',
         blank=True,
         verbose_name='Contact Information'
     )
-    disclaimer = models.ForeignKey('Disclaimer', null=True, blank=True)
+    disclaimer = models.ForeignKey(
+        'Disclaimer',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
 
     def __str__(self):
         return '{}{}'.format(self.name, ' (active)' if self.is_active else '')

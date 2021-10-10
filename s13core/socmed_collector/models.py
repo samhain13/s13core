@@ -67,11 +67,13 @@ class SocMedFeed(SocMedModel):
     )
     api_key = models.ForeignKey(
         APIKey,
-        verbose_name='API Key'
+        verbose_name='API Key',
+        on_delete=models.CASCADE
     )
     processor = models.ForeignKey(
         SocMedProcessor,
-        verbose_name='Feed Processor'
+        verbose_name='Feed Processor',
+        on_delete=models.CASCADE
     )
     max_results = models.IntegerField(default=5)
     response = models.TextField(null=True, blank=True)

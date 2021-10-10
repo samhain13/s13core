@@ -217,7 +217,7 @@ class ArticleView(S13CMSMixin, TemplateView):
         if not self.article:
             return self.not_found({'s': self.settings})
         # Don't show private articles or public articles in private sections.
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             if not self.article.is_public or not self.section.is_public:
                 return self.not_found({'s': self.settings})
         # The requested Article is valid.

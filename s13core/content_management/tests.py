@@ -1,5 +1,6 @@
-from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.test import Client, TestCase
+from django.urls import reverse
 
 from s13core import helpers as h
 from s13core.settings.models import Setting
@@ -11,6 +12,10 @@ class HttpTests(TestCase):
     c = Client()
 
     def setUp(self):
+        # We need a user.
+        if User.objects.count() < 1:
+            user = User.objects.create_user(
+                'admin', 'admin@example.com', 'admin-password!')
         # We need settings.
         if Setting.objects.count() < 1:
             setting = Setting()
@@ -52,6 +57,10 @@ class HttpTests(TestCase):
 
 
 class ModelArticleTests(TestCase):
+    def setUp(self):
+        if User.objects.count() < 1:
+            user = User.objects.create_user(
+                'admin', 'admin@example.com', 'admin-password!')
 
     def test_generate_date_made(self):
         t = h.get_now()

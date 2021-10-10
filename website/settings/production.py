@@ -5,11 +5,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '%g!r-s@a@jk+xie0d!y93ifzp#blfelnp4smn2y-i0nxhv==4y'
 DEBUG = True
 ALLOWED_HOSTS = []
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

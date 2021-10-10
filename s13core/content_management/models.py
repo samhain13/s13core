@@ -102,7 +102,11 @@ class Article(models.Model):
         blank=True,
         help_text='Leave blank to allow the system to auto-generate.'
     )
-    owner = models.ForeignKey(User, default=1)
+    owner = models.ForeignKey(
+        User,
+        default=1,
+        on_delete=models.SET_DEFAULT
+    )
     title = models.CharField(
         max_length=255,
         null=True,
@@ -128,13 +132,15 @@ class Article(models.Model):
         null=True,
         blank=True,
         help_text='Associate an image with this article.',
-        related_name='article_image'
+        related_name='article_image',
+        on_delete=models.SET_NULL
     )
     parent = models.ForeignKey(
         'Article',
         null=True,
         blank=True,
-        help_text='Assiciate this article as a child of another article.'
+        help_text='Assiciate this article as a child of another article.',
+        on_delete=models.SET_NULL
     )
     sidelinks = models.ManyToManyField(
         'Article',
