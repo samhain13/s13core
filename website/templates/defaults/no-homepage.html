@@ -1,15 +1,8 @@
 {% extends 'defaults/_base.html' %}
 
-{% if s.nohome_title %}
-    {% set page_title = s.nohome_title %}
-{% else %}
-    {% set page_title = 'Website Under Construction' %}
-{% endif %}
-
-
-{% block window_title %}{{ s.title|safe }}: {{ page_title }}{% endblock %}
+{% block window_title %}{{ s.window_title|safe }}: {{ s.nohome_title }}{% endblock %}
 {% block body_id %}body-no-homepage{% endblock %}
-{% block article_title %}{{ page_title }}{% endblock %}
+{% block article_title %}{{ s.nohome_title }}{% endblock %}
 
 {% block html_body %}
     {%- if s.nohome_content_type  == 'sections': %}
@@ -33,10 +26,13 @@
     <section id="articles-summary">
         <h2>Latest Articles</h2>
         {%- for a in articles.object_list: %}
-        <p>Article Number {{ a }}</p>
+        <article>
+            <header><h1>{{ a.title|safe }}</h1></header>
+            {{- a.body|safe }}
+        </article>
         {%- endfor %}
         
-        {{ h.make_paginator_nav(articles, reverse('s13.content.homepage'))|safe }}
+        {{ h.make_paginator_nav(articles, reverse('s13cms:homepage'))|safe }}
     </section>
     {%- elif s.nohome_content_type  == 'custom_html': %}
     <section id="custom-content">
