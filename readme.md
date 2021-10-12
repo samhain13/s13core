@@ -4,7 +4,7 @@ S13Core is a Django application that aims to help website developers to easily s
 ## Setting up for development
 It is recommended that you run a Python3 virtual environment.
 
-1. Install dependencies; at the moment, only Django 1.11 (LTS and Jijna2 2.8 are required:
+1. Install dependencies:
 
         $ pip install -r requirements.txt
 

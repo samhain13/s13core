@@ -141,6 +141,10 @@ class ArticleAssociate(S13UserRequiredMixin, RedirectView):
     and article-sidelinks.
     '''
     def get_redirect_url(self, *args, **kwargs):
+        if self.kwargs['action'] not in ['add', 'remove']:
+            messages.error(self.request, 'Invalid action specified.')
+            return reverse_lazy('s13admin:articles')
+
         message = 'Article associdated.'
         is_add = self.kwargs['action'] == 'add'
         mode = self.kwargs['mode']
