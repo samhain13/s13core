@@ -1,35 +1,43 @@
 from django.conf import settings
-from django.conf.urls import url
+from django.urls import path
 from s13core.content_management import views as v
 
 urlpatterns = [
-    url(r'^keyword-search/$',
+    path(
+        'keyword-search/',
         v.KeywordSearchView.as_view(),
-        name='keyword-search'),
-    url(r'^(?P<section_slug>[\w\-]+)/(?P<article_slug>[\w\-]+)/$',
+        name='keyword-search'
+    ),
+    path(
+        '<str:section_slug>/<str:article_slug>/',
         v.ArticleView.as_view(),
-        name='article'),
-    url(r'^(?P<section_slug>[\w\-]+)/$',
+        name='article'
+    ),
+    path(
+        '<str:section_slug>/',
         v.SectionView.as_view(),
-        name='section'),
-    url(r'^$',
+        name='section'
+    ),
+    path(
+        '',
         v.HomepageView.as_view(),
-        name='homepage'),
+        name='homepage'
+    ),
 ]
 
 if settings.DEBUG:
     urlpatterns.insert(
         0,
-        url(
-            r'^ui-tester/(?P<page>[\w\-\.]+)$',
+        path(
+            'ui-tester/<str:page>',
             v.UITestView.as_view(),
             name='ui_tester'
         )
     )
     urlpatterns.insert(
         0,
-        url(
-            r'^ui-tester/$',
+        path(
+            'ui-tester/',
             v.UITestView.as_view(),
             name='ui_tester'
         )

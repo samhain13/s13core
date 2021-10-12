@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 
 from .views import articles
 from .views import fileassets
@@ -9,247 +9,246 @@ from .views import socmed
 
 urlpatterns = [
     # ------------- Contents views.
-    url(
-        r'^articles/$',
+    path(
+        'articles/',
         articles.ArticlesList.as_view(),
         name='articles'
     ),
-    url(
-        r'^articles/detail/(?P<pk>[\d]+)/$',
+    path(
+        'articles/detail/<int:pk>/',
         articles.ArticleDetail.as_view(),
         name='detail_article'
     ),
-    url(
-        r'^articles/detail/(?P<pk>[\d]+)/(?P<mode>[\w\-]+)/$',
+    path(
+        'articles/detail/<int:pk>/<str:mode>/',
         articles.ArticleDetail.as_view(),
         name='detail_article'
     ),
-    url(
-        r'^articles/(?P<action>(add|remove))/(?P<mode>[\w\-]+)/' +
-        '(?P<pk>[\d]+)/(?P<xpk>[\d]+)/$',
+    path(
+        'articles/<str:action>/<str:mode>/<int:pk>/<int:xpk>/',
         articles.ArticleAssociate.as_view(),
         name='associate_article'
     ),
 
-    url(
-        r'^articles/create-article/$',
+    path(
+        'articles/create-article/',
         articles.ArticleCreate.as_view(),
         name='create_article'
     ),
-    url(
-        r'^articles/create-article/(?P<parent_pk>[\d]+)$',
+    path(
+        'articles/create-article/<int:parent_pk>',
         articles.ArticleCreate.as_view(),
         name='create_article'
     ),
-    url(
-        r'^articles/delete-article/(?P<pk>[\d]+)/$',
+    path(
+        'articles/delete-article/<int:pk>/',
         articles.ArticleDelete.as_view(),
         name='delete_article'
     ),
-    url(
-        r'^articles/update-article/(?P<pk>[\d]+)/$',
+    path(
+        'articles/update-article/<int:pk>/',
         articles.ArticleUpdate.as_view(),
         name='update_article'
     ),
 
-    url(
-        r'^fileassets/$',
+    path(
+        'fileassets/',
         fileassets.FileAssetsList.as_view(),
         name='fileassets'
     ),
-    url(
-        r'^fileassets/create-fileasset/$',
+    path(
+        'fileassets/create-fileasset/',
         fileassets.FileAssetCreate.as_view(),
         name='create_fileasset'
     ),
-    url(
-        r'^fileassets/delete-fileasset/(?P<pk>[\d]+)/$',
+    path(
+        'fileassets/delete-fileasset/<int:pk>/',
         fileassets.FileAssetDelete.as_view(),
         name='delete_fileasset'
     ),
-    url(
-        r'^fileassets/update-fileasset/(?P<pk>[\d]+)/$',
+    path(
+        'fileassets/update-fileasset/<int:pk>/',
         fileassets.FileAssetUpdate.as_view(),
         name='update_fileasset'
     ),
 
     # ------------- Social Media Collector views.
-    url(
-        r'^social-media/api-keys/$',
+    path(
+        'social-media/api-keys/',
         socmed.APIKeyList.as_view(),
         name='socmedapikeys'
     ),
-    url(
-        r'^social-media/create-api-key/$',
+    path(
+        'social-media/create-api-key/',
         socmed.APIKeyCreate.as_view(),
         name='socmedapikeys_create'
     ),
-    url(
-        r'^social-media/delete-api-key/(?P<pk>[\d]+)/$',
+    path(
+        'social-media/delete-api-key/<int:pk>/',
         socmed.APIKeyDelete.as_view(),
         name='socmedapikeys_delete'
     ),
-    url(
-        r'^social-media/update-api-key/(?P<pk>[\d]+)/$',
+    path(
+        'social-media/update-api-key/<int:pk>/',
         socmed.APIKeyUpdate.as_view(),
         name='socmedapikeys_update'
     ),
-    url(
-        r'^social-media/feeds/$',
+    path(
+        'social-media/feeds/',
         socmed.SocMedFeedList.as_view(),
         name='socmedfeeds'
     ),
-    url(
-        r'^social-media/create-feed/$',
+    path(
+        'social-media/create-feed/',
         socmed.SocMedFeedCreate.as_view(),
         name='socmedfeeds_create'
     ),
-    url(
-        r'^social-media/delete-feed/(?P<pk>[\d]+)/$',
+    path(
+        'social-media/delete-feed/<int:pk>/',
         socmed.SocMedFeedDelete.as_view(),
         name='socmedfeeds_delete'
     ),
-    url(
-        r'^social-media/update-feed/(?P<pk>[\d]+)/$',
+    path(
+        'social-media/update-feed/<int:pk>/',
         socmed.SocMedFeedUpdate.as_view(),
         name='socmedfeeds_update'
     ),
-    url(
-        r'^social-media/processors/$',
+    path(
+        'social-media/processors/',
         socmed.SocMedProcessorList.as_view(),
         name='socmedprocessors'
     ),
-    url(
-        r'^social-media/create-processor/$',
+    path(
+        'social-media/create-processor/',
         socmed.SocMedProcessorCreate.as_view(),
         name='socmedprocessors_create'
     ),
-    url(
-        r'^social-media/delete-processor/(?P<pk>[\d]+)/$',
+    path(
+        'social-media/delete-processor/<int:pk>/',
         socmed.SocMedProcessorDelete.as_view(),
         name='socmedprocessors_delete'
     ),
-    url(
-        r'^social-media/update-processor/(?P<pk>[\d]+)/$',
+    path(
+        'social-media/update-processor/<int:pk>/',
         socmed.SocMedProcessorUpdate.as_view(),
         name='socmedprocessors_update'
     ),
-    url(
-        r'^social-media/retrieve-feed/(?P<pk>[\d]+)/$',
+    path(
+        'social-media/retrieve-feed/<int:pk>/',
         socmed.RetrieveSocMedFeed.as_view(),
         name='socmed_retrieve'
     ),
 
     # ------------- Settings views.
-    url(
-        r'^settings/$',
+    path(
+        'settings/',
         settings.SettingsList.as_view(),
         name='settings'
     ),
-    url(
-        r'^settings/create-settings/$',
+    path(
+        'settings/create-settings/',
         settings.SettingsCreate.as_view(),
         name='create_settings'
     ),
-    url(
-        r'^settings/delete-settings/(?P<pk>[\d]+)/$',
+    path(
+        'settings/delete-settings/<int:pk>/',
         settings.SettingsDelete.as_view(),
         name='delete_settings'
     ),
-    url(
-        r'^settings/update-settings/(?P<pk>[\d]+)/$',
+    path(
+        'settings/update-settings/<int:pk>/',
         settings.SettingsUpdate.as_view(),
         name='update_settings'
     ),
 
-    url(
-        r'^settings/contact-info/$',
+    path(
+        'settings/contact-info/',
         settings.ContactInfoList.as_view(),
         name='contact_info'
     ),
-    url(
-        r'^settings/create-contact-info/$',
+    path(
+        'settings/create-contact-info/',
         settings.ContactInfoCreate.as_view(),
         name='create_contact_info'
     ),
-    url(
-        r'^settings/delete-contact-info/(?P<pk>[\d]+)/$',
+    path(
+        'settings/delete-contact-info/<int:pk>/',
         settings.ContactInfoDelete.as_view(),
         name='delete_contact_info'
     ),
-    url(
-        r'^settings/update-contact-info/(?P<pk>[\d]+)/$',
+    path(
+        'settings/update-contact-info/<int:pk>/',
         settings.ContactInfoUpdate.as_view(),
         name='update_contact_info'
     ),
 
-    url(
-        r'^settings/copyright-info/$',
+    path(
+        'settings/copyright-info/',
         settings.CopyrightInfoList.as_view(),
         name='copyright_info'
     ),
-    url(
-        r'^settings/create-copyright-info/$',
+    path(
+        'settings/create-copyright-info/',
         settings.CopyrightInfoCreate.as_view(),
         name='create_copyright_info'
     ),
-    url(
-        r'^settings/delete-copyright-info/(?P<pk>[\d]+)/$',
+    path(
+        'settings/delete-copyright-info/<int:pk>/',
         settings.CopyrightInfoDelete.as_view(),
         name='delete_copyright_info'
     ),
-    url(
-        r'^settings/update-copyright-info/(?P<pk>[\d]+)/$',
+    path(
+        'settings/update-copyright-info/<int:pk>/',
         settings.CopyrightInfoUpdate.as_view(),
         name='update_copyright_info'
     ),
 
-    url(
-        r'^settings/disclaimer/$',
+    path(
+        'settings/disclaimer/',
         settings.DisclaimerList.as_view(),
         name='disclaimer'
     ),
-    url(
-        r'^settings/create-disclaimer/$',
+    path(
+        'settings/create-disclaimer/',
         settings.DisclaimerCreate.as_view(),
         name='create_disclaimer'
     ),
-    url(
-        r'^settings/delete-disclaimer/(?P<pk>[\d]+)/$',
+    path(
+        'settings/delete-disclaimer/<int:pk>/',
         settings.DisclaimerDelete.as_view(),
         name='delete_disclaimer'
     ),
-    url(
-        r'^settings/update-disclaimer/(?P<pk>[\d]+)/$',
+    path(
+        'settings/update-disclaimer/<int:pk>/',
         settings.DisclaimerUpdate.as_view(),
         name='update_disclaimer'
     ),
 
     # ------------- Admin home views.
-    url(
-        r'^login/$',
+    path(
+        'login/',
         home.Login.as_view(),
         name='login'
     ),
-    url(
-        r'^logout/$',
+    path(
+        'logout/',
         home.Logout.as_view(),
         name='logout'
     ),
-    url(
-        r'^update-password/(?P<pk>[\d]+)/$',
+    path(
+        'update-password/<int:pk>/',
         home.UpdatePassword.as_view(),
         name='update_password'
     ),
-    url(
-        r'^update-user-info/(?P<pk>[\d]+)/$',
+    path(
+        'update-user-info/<int:pk>/',
         home.UpdateUserInformation.as_view(),
         name='update_user_info'
     ),
 
     # Default route.
-    url(
-        r'^$',
+    path(
+        '',
         home.Dashboard.as_view(),
         name='dashboard'
     ),

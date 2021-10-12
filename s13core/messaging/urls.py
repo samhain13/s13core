@@ -1,9 +1,11 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views as v
 
 urlpatterns = [
-    url(r'^sitemessages/$',
+    path(
+        'sitemessages/',
         v.SiteMessageCreate.as_view(),
-        name='sitemessage-form'),
+        name='sitemessage-form'
+    ),
 ]
