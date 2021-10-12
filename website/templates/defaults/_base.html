@@ -6,11 +6,10 @@
         <title>{% block window_title %}{{ s.window_title|safe }}{% endblock %}</title>
         <meta name="description" content="{% block meta_description %}{{ s.description|safe }}{% endblock %}" />
         <meta name="keywords" content="{% block meta_keywords %}{{ s.keywords|safe }}{% endblock %}" />
+        <link rel="stylesheet" href="/static/css/default.css" />
     {%- if s.css %}
         {{ s.css|safe }}
     {%- endif %}
-    <script src="{{ h.static('js/jquery-3.1.js') }}"></script>
-    <script src="{{ h.static('js/generic-actions.js') }}"></script>
     {%- if s.js %}
         {{ s.js|safe }}
     {%- endif %}

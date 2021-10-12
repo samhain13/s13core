@@ -112,21 +112,17 @@ class HomepageView(S13CMSMixin, TemplateView):
         self.sections = Article.objects.get_sections()
         self.article = Article.objects.get_homepage()
         # No designated homepage:
-        if not self.article:
-            # This is not included in the settings model so we need
-            # to supply it on the fly.
-            self.settings.window_title = self.settings.title
+        if self.article is None:
             # If the site is set to display paginated contents when there
             # is no designated homepage, pull the contents from the database.
             if self.settings.nohome_content_type == 'articles':
-                # TODO: Fix this!
-                self.articles = self.get_paginator(
-                    request,
-                    Article.objects.exclude(parent=None).order_by('-pk'),
+                self.articles = self.paginate_children(
+                    Article.objects.order_by('-pk'),
                     self.settings.nohome_content_items
                 )
                 if self.articles is None:
                     return self.not_found({'s': self.settings})
+                self.settings.window_title = self.settings.title
             else:
                 self.articles = []
             self.template_name = 'defaults/no-homepage.html'
