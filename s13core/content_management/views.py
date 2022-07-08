@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 
 from s13core import helpers as h
 from s13core.settings.models import Setting
@@ -10,6 +10,11 @@ from .models import Article
 
 
 class S13CMSMixin:
+    sections = None
+    articles = None
+    article = None
+    settings = None
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sections'] = self.sections
@@ -227,6 +232,18 @@ class ArticleView(S13CMSMixin, TemplateView):
         context['previous_article'], context['next_article'] = \
             self.article.get_previous_and_next()
         return context
+
+
+class SitemapView(View):
+    '''Generates a plain text sitemap for crawlers and search engines.'''
+
+    def get(self, request, *args, **kwargs):
+        sitemap = []
+        for article in Article.objects.all().order_by('-pk')[:50]:
+            sitemap.append(request.build_absolute_uri(article.make_url()))
+        response = HttpResponse('\n'.join(sitemap))
+        response.headers['Content-Type'] = 'text/plain'
+        return response
 
 
 class UITestView(TemplateView):

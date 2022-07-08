@@ -9,6 +9,11 @@ urlpatterns = [
         name='keyword-search'
     ),
     path(
+        'sitemap/',
+        v.SitemapView.as_view(),
+        name='sitemap'
+    ),
+    path(
         '<str:section_slug>/<str:article_slug>/',
         v.ArticleView.as_view(),
         name='article'

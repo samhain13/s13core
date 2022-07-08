@@ -328,8 +328,10 @@ class Article(models.Model):
         if self.parent is None:
             return reverse('s13cms:section', args=[self.slug])
         else:
-            return reverse('s13cms:article',
-                           args=[self.get_section().slug, self.slug])
+            return reverse(
+                's13cms:article',
+                args=[self.get_section().slug, self.slug]
+            )
 
     def pre_render(self):
         '''Pre-render the body.'''
