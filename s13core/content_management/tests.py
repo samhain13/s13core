@@ -14,8 +14,9 @@ class HttpTests(TestCase):
     def setUp(self):
         # We need a user.
         if User.objects.count() < 1:
-            user = User.objects.create_user(
-                'admin', 'admin@example.com', 'admin-password!')
+            User.objects.create_user(
+                'admin', 'admin@example.com', 'admin-password!'
+            )
         # We need settings.
         if Setting.objects.count() < 1:
             setting = Setting()
@@ -55,12 +56,30 @@ class HttpTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Article Page', str(response.content))
 
+    def test_sitemap(self):
+        expected = [
+            x.make_url() for x in Article.objects.all().order_by('-pk')
+        ]
+        response = self.c.get(reverse('s13cms:sitemap'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers.get('Content-Type'), 'text/plain')
+
+        retrieved = response.content.decode('utf-8').split('\n')
+
+        self.assertEqual(len(retrieved), len(expected))
+
+        for url in retrieved:
+            response = self.c.get(url)
+            self.assertEqual(response.status_code, 200)
+
 
 class ModelArticleTests(TestCase):
     def setUp(self):
         if User.objects.count() < 1:
-            user = User.objects.create_user(
-                'admin', 'admin@example.com', 'admin-password!')
+            User.objects.create_user(
+                'admin', 'admin@example.com', 'admin-password!'
+            )
 
     def test_generate_date_made(self):
         t = h.get_now()
