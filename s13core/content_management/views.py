@@ -237,9 +237,12 @@ class ArticleView(S13CMSMixin, TemplateView):
 class SitemapView(View):
     '''Generates a plain text sitemap for crawlers and search engines.'''
 
+    max_results = 50
+
     def get(self, request, *args, **kwargs):
         sitemap = []
-        for article in Article.objects.all().order_by('-pk')[:50]:
+        for article in Article.objects.filter(
+                is_public=True).order_by('-pk')[:self.max_results]:
             sitemap.append(request.build_absolute_uri(article.make_url()))
         response = HttpResponse('\n'.join(sitemap))
         response.headers['Content-Type'] = 'text/plain'
