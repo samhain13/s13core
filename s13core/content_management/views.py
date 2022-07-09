@@ -1,3 +1,4 @@
+from django.conf import settings as app_settings
 from django.core.paginator import Paginator
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
@@ -237,7 +238,7 @@ class ArticleView(S13CMSMixin, TemplateView):
 class SitemapView(View):
     '''Generates a plain text sitemap for crawlers and search engines.'''
 
-    max_results = 50
+    max_results = getattr(app_settings, 'MAX_SITEMAP_LINKS', 50)
 
     def get(self, request, *args, **kwargs):
         sitemap = []
