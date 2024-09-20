@@ -1,5 +1,5 @@
 asgiref==3.4.1
-Django==3.2.14
+Django==3.2.20
 flake8==3.9.2
 Jinja2==3.0.2
 Markdown==3.3.4
