@@ -9,13 +9,6 @@ urlpatterns = [
             namespace='s13admin'
         )
     ),
-    path(
-        's13msgs/',
-        include(
-            ('s13core.messaging.urls', 's13core.messaging'),
-            namespace='s13messaging'
-        )
-    ),
     # Default route.
     path(
         '',
