@@ -4,6 +4,7 @@
 # jinja2env and used by the templates.
 import os
 import pytz
+from markdown import markdown
 from django.conf import settings as s
 from django.utils import timezone
 
