@@ -20,7 +20,6 @@ INSTALLED_APPS = [
     's13core.administration',
     's13core.content_management',
     's13core.settings',
-    's13core.socmed_collector',
 ]
 
 MIDDLEWARE = [

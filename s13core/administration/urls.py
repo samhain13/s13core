@@ -4,7 +4,6 @@ from .views import articles
 from .views import fileassets
 from .views import home
 from .views import settings
-from .views import socmed
 
 
 urlpatterns = [
@@ -70,73 +69,6 @@ urlpatterns = [
         'fileassets/update-fileasset/<int:pk>/',
         fileassets.FileAssetUpdate.as_view(),
         name='update_fileasset'
-    ),
-
-    # ------------- Social Media Collector views.
-    path(
-        'social-media/api-keys/',
-        socmed.APIKeyList.as_view(),
-        name='socmedapikeys'
-    ),
-    path(
-        'social-media/create-api-key/',
-        socmed.APIKeyCreate.as_view(),
-        name='socmedapikeys_create'
-    ),
-    path(
-        'social-media/delete-api-key/<int:pk>/',
-        socmed.APIKeyDelete.as_view(),
-        name='socmedapikeys_delete'
-    ),
-    path(
-        'social-media/update-api-key/<int:pk>/',
-        socmed.APIKeyUpdate.as_view(),
-        name='socmedapikeys_update'
-    ),
-    path(
-        'social-media/feeds/',
-        socmed.SocMedFeedList.as_view(),
-        name='socmedfeeds'
-    ),
-    path(
-        'social-media/create-feed/',
-        socmed.SocMedFeedCreate.as_view(),
-        name='socmedfeeds_create'
-    ),
-    path(
-        'social-media/delete-feed/<int:pk>/',
-        socmed.SocMedFeedDelete.as_view(),
-        name='socmedfeeds_delete'
-    ),
-    path(
-        'social-media/update-feed/<int:pk>/',
-        socmed.SocMedFeedUpdate.as_view(),
-        name='socmedfeeds_update'
-    ),
-    path(
-        'social-media/processors/',
-        socmed.SocMedProcessorList.as_view(),
-        name='socmedprocessors'
-    ),
-    path(
-        'social-media/create-processor/',
-        socmed.SocMedProcessorCreate.as_view(),
-        name='socmedprocessors_create'
-    ),
-    path(
-        'social-media/delete-processor/<int:pk>/',
-        socmed.SocMedProcessorDelete.as_view(),
-        name='socmedprocessors_delete'
-    ),
-    path(
-        'social-media/update-processor/<int:pk>/',
-        socmed.SocMedProcessorUpdate.as_view(),
-        name='socmedprocessors_update'
-    ),
-    path(
-        'social-media/retrieve-feed/<int:pk>/',
-        socmed.RetrieveSocMedFeed.as_view(),
-        name='socmed_retrieve'
     ),
 
     # ------------- Settings views.
