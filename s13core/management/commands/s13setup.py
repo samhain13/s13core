@@ -1,3 +1,5 @@
+from getpass import getpass
+
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
@@ -97,11 +99,12 @@ class Command(BaseCommand):
             user.save()
 
     def _prompt_info(self, question, is_required=True):
+        use_input = input if 'password' not in question.lower() else getpass
         p = '{}{}: '.format(question, ' (required)' if is_required else '')
-        s = input(p)
+        s = use_input(p)
         if is_required:
             while not s:
-                s = input(p)
+                s = use_input(p)
         return s
 
     def _prompt_yesno(self, question):
